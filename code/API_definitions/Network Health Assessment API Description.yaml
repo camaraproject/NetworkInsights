@@ -1,0 +1,168 @@
+openapi: 3.0.3
+info:
+  title: Network Health Assessment
+  description: This API allows users to query the health score of a specified network, which consists of multiple components including the wireless network, transmission network, and core network. By calculating the health score for each component and then applying weighted calculations, the API provides a comprehensive health score result for the specified network.
+  version: 0.1.1-wip
+  contact:
+    email: sp-network-insights@lists.camaraproject.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+externalDocs:
+  description: Project documentation at CAMARA
+  url: https://github.com/camaraproject/NetworkInsights
+servers:
+  - url: '{apiRoot}/ecop-boss/ne-health/network_score_lastest'
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root
+tags:
+  - name: Network lastest Score
+    description: This API allows users to query the health score of a specified network, which consists of multiple components including the wireless network, transmission network, and core network. By calculating the health score for each component and then applying weighted calculations, the API provides a comprehensive health score result for the specified network.
+paths:
+  /network_score_lastest:
+    get:
+      tags:
+        - Network lastest Score
+      summary: Query the latest time point network health score.
+      description: |
+        Query the health assessment results of the network.
+        - The health score at the latest time point.
+      operationId: struct
+      parameters:
+        - in: header
+          name: authorization
+          required: true
+          description: authorization token for the services
+          schema:
+            type: string
+        - in: query
+          name: structCode
+          required: true
+          description: module of Network
+          schema:
+            type: string
+            example: 
+              net
+      responses:
+        '200':
+          description: Successful response with the network score struct.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    description: The status code of the response.
+                  message:
+                    type: string
+                    description: A message indicating the success of the query.
+                  data:
+                    type: object
+                    properties:
+                      time:
+                        type: string
+                        description: The time of the score create.
+                      valid:
+                        type: integer
+                        description: The validity of the score.
+                      value:
+                        type: string
+                        description: The score of the health.
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
+        '504':
+          $ref: '#/components/responses/Generic504'
+      security:
+        - openId:
+components:
+  securitySchemes:
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+  schemas:
+
+  responses:
+    Generic400:
+      description: Problem with the client request
+      content:
+        application/json:
+          example:
+            status: 400
+            code: INVALID_ARGUMENT
+            message: "Client specified an invalid argument, request body or query param"
+    Generic401:
+      description: Authentication problem with the client request
+      headers:
+        X-Correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          example:
+            status: 401
+            code: UNAUTHENTICATED
+            message: "Request not authenticated due to missing, invalid, or expired credentials"
+    Generic403:
+      description: Authentication problem with the client request
+      headers:
+        X-Correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          example:
+            status: 403
+            code: PERMISSION_DENIED
+            message: "Operation not allowed: ..."
+    Generic500:
+      description: Server error
+      headers:
+        X-Correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          example:
+            status: 500
+            code: INTERNAL
+            message: "Internal Server error"
+    Generic503:
+      description: Service unavailable. Typically the server is down.
+      headers:
+        X-Correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          example:
+            status: 503
+            code: UNAVAILABLE
+            message: "Service unavailable"
+    Generic504:
+      description: Request time exceeded. If it happens repeatedly, consider reducing the request complexity
+      headers:
+        X-Correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          example:
+            status: 504
+            code: TIMEOUT
+            message: "Request timeout exceeded. Try later."
