@@ -1,0 +1,299 @@
+openapi: 3.0.3
+info:
+  title: Network Traffic Analysis
+  description: API to analyze traffic on a specified network.
+  version: 0.1.1-wip
+  contact:
+    email: sp-network-insights@lists.camaraproject.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+externalDocs:
+  description: Project documentation at CAMARA
+  url: https://github.com/camaraproject/NetworkInsights
+servers:
+  - url: '{apiRoot}/networkTrafficAnalysis/v0'
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root
+tags:
+  - name: Network Traffic Analysis
+    description: The API allows API consumers to query 5G traffic statistics information for a specified network user.
+paths:
+  /traffic-analysis:
+    get:
+      tags:
+        - Network Traffic Analysis
+      summary: Get network traffic analysis
+      operationId: getTrafficAnalysis
+      parameters:
+        - name: startTime
+          in: query
+          required: true
+          description: Start time for the analysis in the format 'YYYY-MM-DD HH:mm:ss'
+          schema:
+            type: string
+        - name: endTime
+          in: query
+          required: true
+          description: End time for the analysis in the format 'YYYY-MM-DD HH:mm:ss'
+          schema:
+            type: string
+        - name: domainId
+          in: query
+          description: Domain ID (optional)
+          schema:
+            type: string
+        - name: period
+          in: query
+          required: true
+          description: Period for the analysis ('DAY', 'HOUR', etc.)
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number for pagination (optional)
+          schema:
+            type: integer
+        - name: pageSize
+          in: query
+          description: Number of records per page for pagination (optional)
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrafficAnalysisResponse'
+              examples:
+                SUCCESS:
+                  $ref: '#/components/examples/TrafficAnalysisSuccess'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
+        '504':
+          $ref: '#/components/responses/Generic504'
+      security:
+        - userToken: string
+components:
+  schemas:
+    TrafficAnalysisResponse:
+      type: object
+      description: Response schema for traffic analysis
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: integer
+          description: HTTP response status code
+        message:
+          type: string
+          description: A message describing the status
+        data:
+          type: object
+          description: Traffic analysis data
+          properties:
+            records:
+              type: array
+              description: Array of traffic records
+              items:
+                type: object
+                properties:
+                  app:
+                    type: string
+                    description: Application name
+                  address:
+                    type: string
+                    description: Application address
+                  description:
+                    type: string
+                    description: Application description
+                  accessCount:
+                    type: integer
+                    description: Access count
+                  accessUpFlow:
+                    type: integer
+                    description: Upstream traffic flow
+                  accessDownFlow:
+                    type: integer
+                    description: Downstream traffic flow
+                  accessFlow:
+                    type: integer
+                    description: Total traffic flow
+                  startTime:
+                    type: string
+                    description: Start time of the record
+                  endTime:
+                    type: string
+                    description: End time of the record
+                  accessDate:
+                    type: string
+                    description: Access date
+            total:
+              type: integer
+              description: Total number of records
+            size:
+              type: integer
+              description: Number of records per page
+            current:
+              type: integer
+              description: Current page number
+            orders:
+              type: array
+              description: Array of sorting orders
+            searchCount:
+              type: boolean
+              description: Indicates if the total count is included in the response
+    ErrorInfo:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          description: HTTP response status code
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Detailed error description
+  responses:
+    Generic400:
+      description: Problem with the client request
+      headers:
+        X-Correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorInfo'
+          example:
+            status: 400
+            code: INVALID_ARGUMENT
+            message: "Client specified an invalid argument, request body or query param"
+    Generic401:
+      description: Authentication problem with the client request
+      headers:
+        X-Correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorInfo'
+          example:
+            status: 401
+            code: UNAUTHENTICATED
+            message: "Request not authenticated due to missing, invalid, or expired credentials"
+    Generic403:
+      description: Authentication problem with the client request
+      headers:
+        X-Correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorInfo'
+          example:
+            status: 403
+            code: PERMISSION_DENIED
+            message: "Operation not allowed: ..."
+    Generic500:
+      description: Server error
+      headers:
+        X-Correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorInfo'
+          example:
+            status: 500
+            code: INTERNAL
+            message: "Internal Server error"
+    Generic503:
+      description: Service unavailable. Typically the server is down.
+      headers:
+        X-Correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorInfo'
+          example:
+            status: 503
+            code: UNAVAILABLE
+            message: "Service unavailable"
+    Generic504:
+      description: Request time exceeded. If it happens repeatedly, consider reducing the request complexity
+      headers:
+        X-Correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorInfo'
+          example:
+            status: 504
+            code: TIMEOUT
+            message: "Request timeout exceeded. Try later."
+  examples:
+    TrafficAnalysisSuccess:
+      value:
+        status: 200
+        message: "操作成功"
+        data:
+          records:
+          - app: "网上业务平台"
+            address: "202.112.17.122"
+            description: "网络中心内部使用业务办理平台"
+            accessCount: 0
+            accessUpFlow: 0
+            accessDownFlow: 0
+            accessFlow: 0
+            startTime: null
+            endTime: null
+            accessDate: "2024-06-07"
+          - app: "网上办事大厅"
+            address: "202.38.193.135"
+            description: "网上办事大厅"
+            accessCount: 102
+            accessUpFlow: 0
+            accessDownFlow: 24
+            accessFlow: 32
+            startTime: null
+            endTime: null
+            accessDate: "2024-06-07"
+          # ... 其他应用数据记录 ...
+          total: 22
+          size: 15
+          current: 1
+          orders: []
+          searchCount: true
+          pages: 2
