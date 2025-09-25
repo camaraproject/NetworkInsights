@@ -17,7 +17,7 @@ Sandbox API Repository to describe, develop, document, and test the NetworkInsig
 
 * Service API(s) “NetworkInsights” (see APIBacklog.md) 
 * The API(s) provide(s) the API consumer with the ability to:  
-  * Network Insight offers a unified analytical platform for specific networks, such as private networks and slices, focusing exclusively on aggregated network-level data rather than individual device information. It empowers users to both evaluate the overall network health through a comprehensive, component-based scoring system and to analyze service traffic patterns with customizable granularity. By providing a holistic view—from infrastructure health to user traffic trends—this API suite delivers the critical, real-time data needed for comprehensive network monitoring, strategic performance optimization, and effective early warning systems.
+  * Network Insight offers a unified analytical platform for specific networks, such as private networks and slices, focusing exclusively on aggregated network-level data rather than individual device information. It empowers users to both evaluate the overall network health through a comprehensive, component-based scoring system and to analyze service traffic patterns with customizable granularity. By providing a holistic view — from infrastructure health to user traffic trends — this API suite delivers the critical, real-time data needed for comprehensive network monitoring, strategic performance optimization, and effective early warning systems.
 * Describe, develop, document, and test the API(s)
 * Started: May 2025
 <!-- * Incubating stage since: {{incubation date}} --> 
