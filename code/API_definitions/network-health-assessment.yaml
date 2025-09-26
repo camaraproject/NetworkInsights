@@ -1,0 +1,173 @@
+openapi: 3.0.3
+info:
+  title: Network Health Assessment
+  description: This API allows users to query the health score of a specified network, which consists of multiple components including the wireless network, transmission network, and core network. By calculating the health score for each component and then applying weighted calculations, the API provides a comprehensive health score result for the specified network.
+  version: 0.1.1-wip
+  contact:
+    email: sp-network-insights@lists.camaraproject.org
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+externalDocs:
+  description: Project documentation at CAMARA
+  url: https://github.com/camaraproject/NetworkInsights
+servers:
+  - url: '{apiRoot}/ecop-boss/ne-health/network_score_lastest'
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root
+tags:
+  - name: Network lastest Score
+    description: This API allows users to query the health score of a specified network, which consists of multiple components including the wireless network, transmission network, and core network. By calculating the health score for each component and then applying weighted calculations, the API provides a comprehensive health score result for the specified network.
+paths:
+  /network_score_lastest:
+    get:
+      tags:
+        - Network lastest Score
+      summary: Query the latest time point network health score.
+      description: |
+        Query the health assessment results of the network.
+        - The health score at the latest time point.
+      operationId: struct
+      parameters:
+        - in: header
+          name: SignatureNonce
+          required: true
+          description: A Universally Unique Identifier (UUID) for the specific item.
+          schema:
+            type: string
+        - in: header
+          name: Version
+          required: true
+          description: The date in yyyy-MM-dd format.
+          schema:
+            type: string
+        - in: header
+          name: AccessKeyId
+          required: true
+          description: The customer’s account name on the network management platform.
+          schema:
+            type: string
+        - in: header
+          name: Timestamp
+          required: true
+          description: The timestamp of the event in UTC.
+          schema:
+            type: string
+        - in: header
+          name: Signature
+          required: true
+          description: An encrypted result string generated from other request headers and a secret key, used for request validation.
+          schema:
+            type: string
+        - in: query
+          name: structCode
+          required: true
+          description: module of Network
+          schema:
+            type: string
+            example: 
+              net | net_wireless | net_transnet | net_core
+      responses:
+        '200':
+          description: Successful response with the network score struct.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    description: The status code of the response.
+                  message:
+                    type: string
+                    description: A message indicating the success of the query.
+                  data:
+                    type: object
+                    properties:
+                      time:
+                        type: string
+                        description: The time of the score create.
+                      valid:
+                        type: integer
+                        description: The validity of the score.
+                      value:
+                        type: string
+                        description: The score of the health.
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '500':
+          $ref: '#/components/responses/Generic500'
+      security:
+        - openId:
+components:
+  securitySchemes:
+    SignatureNonceAuth:
+      type: apiKey
+      in: header
+      name: SignatureNonce
+      description: A Universally Unique Identifier (UUID) for the specific item.
+    VersionAuth:
+      type: apiKey
+      in: header
+      name: Version
+      description: The date in yyyy-MM-dd format.
+    AccessKeyIdAuth:
+      type: apiKey
+      in: header
+      name: AccessKeyId
+      description: The customer’s account name on the network management platform.
+    TimestampAuth:
+      type: apiKey
+      in: header
+      name: Timestamp
+      description: The timestamp of the event in UTC.
+    SignatureAuth:
+      type: apiKey
+      in: header
+      name: Signature
+      description: |
+        Custom signature authentication.
+        Generate the encrypted signature string by combining the following request header parameters: 
+        SignatureNonce, Version, AccessKeyId, Timestamp, 
+        and the fixed parameters SignatureVersion (fixed: 1.0), Format (fixed: JSON), 
+        and SignatureMethod (fixed: HMAC-SHA1).
+        Signature Generation Process:
+        1. URL-encode all request parameters.
+        2. Sort the parameters lexicographically by their keys.
+        3. Concatenate the sorted key-value pairs into a single string.
+        4. Prepare the signature string, which includes the HTTP method and the URL-encoded parameter string, in the format: POST&%2F&<encoded_parameters>.
+        5. Sign the string using the user’s secret key and the HMAC-SHA1 algorithm.
+        6. Encode the resulting signature using Base64.
+        Signature Verification Process:
+        1. Receive the API request, including the request parameters and the Base64-encoded signature(header:Signature).
+        2. Regenerate the signature using the same steps as in the signature generation process.
+        3. Compare the received signature with the regenerated signature.
+        4. If the two signatures match, the verification passes, indicating that the request is intact and from a trusted source.
+        5. If the signatures do not match, the verification fails, suggesting that the request may have been tampered with or an error occurred during transmission.
+
+  responses:
+    Generic400:
+      description: Problem with the client request
+      content:
+        application/json:
+          examples:
+            MissingQueryParameter:
+              summary: Example of missing required query parameter
+              value:
+                status: 400
+                data: null
+                message: "Required string parameter 'structCode' is not present"
+            MissingHeaderParameter:
+              summary: Example of missing required header parameter
+              value:
+                status: 400
+                data: null
+                message: "Required header 'Signature' is not present."
+            AuthenticationFailed:
+              summary: Example of authentication failed
+              value:
+                status: 400
+                data: null
+                message: "Authentication failed"
