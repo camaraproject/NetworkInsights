@@ -1,4 +1,4 @@
-@NetworkSliceBooking
+@NetworkHealthAssessment
 Feature: CAMARA Network Health Assessment API v0.1.0-rc.1 - Operation network_score_lastest
 
     # Input to be provided by the implementation to the tester
