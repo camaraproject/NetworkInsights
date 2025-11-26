@@ -67,7 +67,7 @@ paths:
           description: module of Network
           schema:
             type: string
-            example: 
+            example:
               net | net_wireless | net_transnet | net_core
       responses:
         '200':
@@ -129,9 +129,9 @@ components:
       name: Signature
       description: |
         Custom signature authentication.
-        Generate the encrypted signature string by combining the following request header parameters: 
-        SignatureNonce, Version, AccessKeyId, Timestamp, 
-        and the fixed parameters SignatureVersion (fixed: 1.0), Format (fixed: JSON), 
+        Generate the encrypted signature string by combining the following request header parameters:
+        SignatureNonce, Version, AccessKeyId, Timestamp,
+        and the fixed parameters SignatureVersion (fixed: 1.0), Format (fixed: JSON),
         and SignatureMethod (fixed: HMAC-SHA1).
         Signature Generation Process:
         1. URL-encode all request parameters.
