@@ -145,9 +145,9 @@ components:
       name: Signature
       description: |
         Custom signature authentication.
-        Generate the encrypted signature string by combining the following request header parameters: 
-        SignatureNonce, Version, AccessKeyId, Timestamp, 
-        and the fixed parameters SignatureVersion (fixed: 1.0), Format (fixed: JSON), 
+        Generate the encrypted signature string by combining the following request header parameters:
+        SignatureNonce, Version, AccessKeyId, Timestamp,
+        and the fixed parameters SignatureVersion (fixed: 1.0), Format (fixed: JSON),
         and SignatureMethod (fixed: HMAC-SHA1).
         Signature Generation Process:
         1. URL-encode all request parameters.
@@ -347,26 +347,26 @@ components:
         message: "操作成功"
         data:
           records:
-          - app: "网上业务平台"
-            address: "202.112.17.122"
-            description: "网络中心内部使用业务办理平台"
-            accessCount: 0
-            accessUpFlow: 0
-            accessDownFlow: 0
-            accessFlow: 0
-            startTime: null
-            endTime: null
-            accessDate: "2024-06-07"
-          - app: "网上办事大厅"
-            address: "202.38.193.135"
-            description: "网上办事大厅"
-            accessCount: 102
-            accessUpFlow: 0
-            accessDownFlow: 24
-            accessFlow: 32
-            startTime: null
-            endTime: null
-            accessDate: "2024-06-07"
+            - app: "网上业务平台"
+              address: "202.112.17.122"
+              description: "网络中心内部使用业务办理平台"
+              accessCount: 0
+              accessUpFlow: 0
+              accessDownFlow: 0
+              accessFlow: 0
+              startTime: null
+              endTime: null
+              accessDate: "2024-06-07"
+            - app: "网上办事大厅"
+              address: "202.38.193.135"
+              description: "网上办事大厅"
+              accessCount: 102
+              accessUpFlow: 0
+              accessDownFlow: 24
+              accessFlow: 32
+              startTime: null
+              endTime: null
+              accessDate: "2024-06-07"
           # ... 其他应用数据记录 ...
           total: 22
           size: 15
