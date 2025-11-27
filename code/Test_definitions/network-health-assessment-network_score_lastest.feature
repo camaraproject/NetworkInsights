@@ -22,7 +22,7 @@ Feature: CAMARA Network Health Assessment API v0.1.0-rc.1 - Operation network_sc
     And the header "SignatureNonce" is set to a Universally Unique Identifier (UUID) for the specific item
     And the header "Version" is set to a date in yyyy-MM-dd format
     And the header "AccessKeyId" is set to a customer’s account name on the network management platform
-	And the header "Timestamp" is set to a timestamp of the event in UTC
+    And the header "Timestamp" is set to a timestamp of the event in UTC
     And the header "Signature" is set to an encrypted result string generated from other request headers and a secret key, used for request validation
     And the "structCode" parameter specifies the network structure type. It must be a string value and must be one of the following: net, net_wireless, net_transnet, or net_core
 
