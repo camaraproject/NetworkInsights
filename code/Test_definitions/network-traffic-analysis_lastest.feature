@@ -1,5 +1,4 @@
-  @NetworkTrafficAnalysis
-  Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation network_traffic_analysis
+Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation network_traffic_analysis
 
     # Input to be provided by the implementation to the tester
     #
