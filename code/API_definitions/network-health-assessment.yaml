@@ -21,7 +21,7 @@ tags:
   - name: Network lastest Score
     description: This API allows users to query the health score of a specified network, which consists of multiple components including the wireless network, transmission network, and core network. By calculating the health score for each component and then applying weighted calculations, the API provides a comprehensive health score result for the specified network.
 paths:
-  /network_score_lastest:
+  /network-score-lastest:
     get:
       tags:
         - Network lastest Score
@@ -174,3 +174,4 @@ components:
                 data: null
                 message: "Authentication failed"
                 
+
