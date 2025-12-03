@@ -67,8 +67,8 @@ paths:
           description: module of Network
           schema:
             type: string
-            example:
-              net | net_wireless | net_transnet | net_core
+            enum: [net, net_wireless, net_transnet, net_core]
+            example: net_wireless
       responses:
         '200':
           description: Successful response with the network score struct.
@@ -97,10 +97,12 @@ paths:
                         description: The score of the health.
         '400':
           $ref: '#/components/responses/Generic400'
-        '500':
-          $ref: '#/components/responses/Generic500'
       security:
-        - openId:
+        - SignatureNonceAuth: []
+          VersionAuth: []
+          AccessKeyIdAuth: []
+          TimestampAuth: []
+          SignatureAuth: []
 components:
   securitySchemes:
     SignatureNonceAuth:
@@ -171,3 +173,5 @@ components:
                 status: 400
                 data: null
                 message: "Authentication failed"
+
+
