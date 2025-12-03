@@ -173,5 +173,4 @@ components:
                 status: 400
                 data: null
                 message: "Authentication failed"
-
-
+                
