@@ -97,8 +97,6 @@ paths:
                         description: The score of the health.
         '400':
           $ref: '#/components/responses/Generic400'
-        '500':
-          $ref: '#/components/responses/Generic500'
       security:
         - SignatureNonceAuth: []
           VersionAuth: []
@@ -175,4 +173,5 @@ components:
                 status: 400
                 data: null
                 message: "Authentication failed"
+
 
