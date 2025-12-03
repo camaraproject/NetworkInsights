@@ -355,8 +355,8 @@ components:
               accessUpFlow: 0
               accessDownFlow: 0
               accessFlow: 0
-              startTime: null
-              endTime: null
+              startTime: ""
+              endTime: ""
               accessDate: "2024-06-07"
             - app: "网上办事大厅"
               address: "202.38.193.135"
@@ -365,8 +365,8 @@ components:
               accessUpFlow: 0
               accessDownFlow: 24
               accessFlow: 32
-              startTime: null
-              endTime: null
+              startTime: ""
+              endTime: ""
               accessDate: "2024-06-07"
           # ... 其他应用数据记录 ...
           total: 22
