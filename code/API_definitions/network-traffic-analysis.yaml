@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Network Traffic Analysis
   description: API to analyze traffic on a specified network.
-  version: 0.1.1-wip
+  version: wip
   contact:
     email: sp-network-insights@lists.camaraproject.org
   license:
@@ -12,7 +12,7 @@ externalDocs:
   description: Project documentation at CAMARA
   url: https://github.com/camaraproject/NetworkInsights
 servers:
-  - url: '{apiRoot}/ecop-boss/api/networkTrafficAnalysis/v0'
+  - url: '{apiRoot}/ecop-boss/api/networkTrafficAnalysis/vwip'
     variables:
       apiRoot:
         default: http://localhost:9091
