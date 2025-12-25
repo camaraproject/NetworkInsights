@@ -9,7 +9,7 @@
 
 ## ***Summary***
 
-There are emerging requirements in high-rate time-critical applications in the areas of Cloud-gaming, AR/VR, Live Video Streaming, Real-time Multi-Media etc through mobile networks. The on-demand network slicing service technology can provide a network slice reservation method for such scenarios to meet the SLA assurance expected by developers for a specific time period and a dedicated service area. The Network Slice Booking API provides such abilities for OTT developers to reserve, dynamically provisioning, query, dynamically destroy a slice with customized SLA assurance capabilities, customized service duration, expected slice covered locations and so on. <br /> The Network Slice Assignment API then lets them dynamically assign end-users to these reserved slices, delivering the guaranteed experience. It allows developers to assign/release users to/from reserved slices, as well as provides functionalities to query assigned slices through user devices and retrieve the list of users currently assigned to a reserved slice by the slice identifier.
+General private network users typically lack professional O&M capabilities and are unable to determine the actual operating status of the private network by directly inspecting devices or interpreting complex metric data provided by management platforms. Therefore, it is necessary to provide a series of higher-level visualization functions to facilitate self-management and self-operations for private network users. <br /> The Network Health Assessment API provides such capabilities for monitoring personnel, enabling them to perform private network health self-checks based on a preconfigured health assessment calculation model.
 
 ## ***Scenarios - Assignment Scenario 1***
 
