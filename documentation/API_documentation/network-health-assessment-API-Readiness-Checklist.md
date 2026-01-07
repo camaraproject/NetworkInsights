@@ -13,7 +13,7 @@ Checklist for network-health-assessment v0.1.0 in r3.4
 |  7 | Basic API test cases & documentation         |   O   |         M         |    M    |    M   |   Y  |              [link](/code/Test_definitions)               |
 |  8 | Enhanced API test cases & documentation      |   O   |         O         |    O    |    M   |   Y  |                [link](/code/Test_definitions)                |
 |  9 | Test result statement                        |   O   |         O         |    O    |    M   |   N  |                                                                                             |
-| 10 | API release numbering convention applied     |   M   |         M         |    M    |    M   |   Y  |                                                                                             |
+| 10 | API release numbering convention applied     |   M   |         M         |    M    |    M   |   N  |                                                                                             |
 | 11 | Change log updated                           |   M   |         M         |    M    |    M   |   Y  |                                    [link](/CHANGELOG.md)                                    |
 | 12 | Previous public release was certified        |   O   |         O         |    O    |    M   |   N  |                                                                                             |
 | 13 | API description (for marketing)               |   O   |         O         |    M    |    M   |   Y  |                               [Wiki link](https://lf-camaraproject.atlassian.net/wiki/spaces/CAM/pages/254574630/Network+Health+Assessment+API+description)   |                                                           |
