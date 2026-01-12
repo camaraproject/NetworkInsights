@@ -9,7 +9,7 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 externalDocs:
-  description: Project documentation at CAMARA
+  description: Project documentation at CAMARA.
   url: https://github.com/camaraproject/NetworkInsights
 servers:
   - url: '{apiRoot}/ecop-boss/api/networkTrafficAnalysis/vwip'
