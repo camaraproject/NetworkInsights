@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Network Traffic Analysis
   description: API to analyze traffic on a specified network.
-  version: wip
+  version: 0.1.0-rc.1
   contact:
     email: sp-network-insights@lists.camaraproject.org
   license:
