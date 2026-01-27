@@ -17,8 +17,8 @@ The below sections record the changes for each API version in each release as fo
 ## Release Notes
 This release contains the definition and documentation of
 
-- network-health-assessment v0.1.0-alpha.1
-- network-traffic-analysis v0.1.0-alpha.1
+- network-health-assessment v0.1.0-rc.1
+- network-traffic-analysis v0.1.0-rc.1
 
 The API definition(s) are based on
 
@@ -26,7 +26,7 @@ The API definition(s) are based on
 - Identity and Consent Management v0.4.0
 ## network-health-assessment v0.1.0
 
-**network-health-assessment v0.1.0-alpha.1 and network-traffic-analysis v0.1.0-alpha.1 is first public release version of the network-health-assessment API**
+**network-health-assessment v0.1.0-rc.1 and network-traffic-analysis v0.1.0-rc.1 is first public release version of the network-health-assessment API**
 
 - API definition **with inline documentation**:
 
