@@ -217,22 +217,9 @@ components:
       description: Problem with the client request
       content:
         application/json:
-          examples:
-            MissingQueryParameter:
-              summary: Example of missing required query parameter
-              value:
-                status: 400
-                data: null
-                message: "Required string parameter 'structCode' is not present"
-            MissingHeaderParameter:
-              summary: Example of missing required header parameter
-              value:
-                status: 400
-                data: null
-                message: "Required header 'Signature' is not present."
-            AuthenticationFailed:
-              summary: Example of authentication failed
-              value:
-                status: 400
-                data: null
-                message: "Authentication failed"
+          schema:
+            $ref: '#/components/schemas/ErrorInfo'
+          example:
+            status: 400
+            code: UNAUTHENTICATED
+            message: "Example of missing required query parameter"
