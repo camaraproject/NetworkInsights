@@ -1,4 +1,4 @@
-Feature: CAMARA Network Health Assessment API v0.1.0-alpha.1 - Operation network_score_lastest
+Feature: CAMARA Network Health Assessment API v0.1.0-rc.1 - Operation network_score_lastest
 
     # Input to be provided by the implementation to the tester
     #
@@ -14,7 +14,7 @@ Feature: CAMARA Network Health Assessment API v0.1.0-alpha.1 - Operation network
     # * An Area outside the supported area
     # * A combination of request parameters including service area, start time, and end time, configuration information of network slicing
     #
-    # References to OAS spec schemas refer to schemas specifies in network-health-assessment.yaml, version v0.1.0-alpha.1
+    # References to OAS spec schemas refer to schemas specifies in network-health-assessment.yaml, version v0.1.0-rc.1
 
   Background: Common network_score_lastest setup
     Given an environment at "apiRoot"
