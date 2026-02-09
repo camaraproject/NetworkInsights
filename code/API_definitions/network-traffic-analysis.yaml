@@ -166,6 +166,10 @@ paths:
           SignatureAuth: []
 components:
   securitySchemes:
+    openId:
+      type: openIdConnect
+      description: Common security scheme for all CAMARA APIs
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
     SignatureNonceAuth:
       type: apiKey
       in: header
@@ -277,6 +281,10 @@ components:
             searchCount:
               type: boolean
               description: Indicates if the total count is included in the response
+    XCorrelator:
+      type: string
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
     ErrorInfo:
       type: object
       required:
