@@ -147,49 +147,6 @@ components:
       type: openIdConnect
       description: Common security scheme for all CAMARA APIs
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
-    SignatureNonceAuth:
-      type: apiKey
-      in: header
-      name: SignatureNonce
-      description: A Universally Unique Identifier (UUID) for the specific item.
-    VersionAuth:
-      type: apiKey
-      in: header
-      name: Version
-      description: The date in yyyy-MM-dd format.
-    AccessKeyIdAuth:
-      type: apiKey
-      in: header
-      name: AccessKeyId
-      description: The customer’s account name on the network management platform.
-    TimestampAuth:
-      type: apiKey
-      in: header
-      name: Timestamp
-      description: The timestamp of the event in UTC.
-    SignatureAuth:
-      type: apiKey
-      in: header
-      name: Signature
-      description: |
-        Custom signature authentication.
-        Generate the encrypted signature string by combining the following request header parameters:
-        SignatureNonce, Version, AccessKeyId, Timestamp,
-        and the fixed parameters SignatureVersion (fixed: 1.0), Format (fixed: JSON),
-        and SignatureMethod (fixed: HMAC-SHA1).
-        Signature Generation Process:
-        1. URL-encode all request parameters.
-        2. Sort the parameters lexicographically by their keys.
-        3. Concatenate the sorted key-value pairs into a single string.
-        4. Prepare the signature string, which includes the HTTP method and the URL-encoded parameter string, in the format: POST&%2F&<encoded_parameters>.
-        5. Sign the string using the user’s secret key and the HMAC-SHA1 algorithm.
-        6. Encode the resulting signature using Base64.
-        Signature Verification Process:
-        1. Receive the API request, including the request parameters and the Base64-encoded signature(header:Signature).
-        2. Regenerate the signature using the same steps as in the signature generation process.
-        3. Compare the received signature with the regenerated signature.
-        4. If the two signatures match, the verification passes, indicating that the request is intact and from a trusted source.
-        5. If the signatures do not match, the verification fails, suggesting that the request may have been tampered with or an error occurred during transmission.
   schemas:
     XCorrelator:
       type: string
