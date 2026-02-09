@@ -1,6 +1,7 @@
 openapi: 3.0.3
 info:
   title: Network Traffic Analysis
+  x-camara-commonalities: 0.6
   description: |
     Network Insight offers a unified analytical platform for specific networks, such as private networks and slices, focusing exclusively on aggregated network-level data rather than individual device information.
     It empowers users to both evaluate the overall network health through a comprehensive, component-based scoring system and to analyze service traffic patterns with customizable granularity.
