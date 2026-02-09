@@ -135,18 +135,17 @@ paths:
                         description: The score of the health.
         '400':
           $ref: '#/components/responses/Generic400'
-      security:
-        - SignatureNonceAuth: []
-          VersionAuth: []
-          AccessKeyIdAuth: []
-          TimestampAuth: []
-          SignatureAuth: []
 components:
   securitySchemes:
     openId:
       type: openIdConnect
       description: Common security scheme for all CAMARA APIs
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
+  headers:
+    x-correlator:
+      description: Correlation id for the different services
+      schema:
+        $ref: "#/components/schemas/XCorrelator"
   schemas:
     XCorrelator:
       type: string
