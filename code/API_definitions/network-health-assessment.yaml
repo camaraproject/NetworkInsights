@@ -190,27 +190,27 @@ components:
         4. If the two signatures match, the verification passes, indicating that the request is intact and from a trusted source.
         5. If the signatures do not match, the verification fails, suggesting that the request may have been tampered with or an error occurred during transmission.
   schemas:
-      XCorrelator:
-        type: string
-        pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
-        example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
-      ErrorInfo:
-        type: object
-        description: Error information
-        required:
-          - status
-          - code
-          - message
-        properties:
-          status:
-            type: integer
-            description: HTTP response status code
-          code:
-            type: string
-            description: A human-readable code to describe the error
-          message:
-            type: string
-            description: A human-readable description of what the event represents
+    XCorrelator:
+      type: string
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+    ErrorInfo:
+      type: object
+      description: Error information
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          description: HTTP response status code
+        code:
+          type: string
+          description: A human-readable code to describe the error
+        message:
+          type: string
+          description: A human-readable description of what the event represents
   responses:
     Generic400:
       description: Problem with the client request
