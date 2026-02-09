@@ -2,14 +2,14 @@ openapi: 3.0.3
 info:
   title: Network Traffic Analysis
   description: |
-    Network Insight offers a unified analytical platform for specific networks, such as private networks and slices, focusing exclusively on aggregated network-level data rather than individual device information. 
-    It empowers users to both evaluate the overall network health through a comprehensive, component-based scoring system and to analyze service traffic patterns with customizable granularity. 
+    Network Insight offers a unified analytical platform for specific networks, such as private networks and slices, focusing exclusively on aggregated network-level data rather than individual device information.
+    It empowers users to both evaluate the overall network health through a comprehensive, component-based scoring system and to analyze service traffic patterns with customizable granularity.
     By providing a holistic view — from infrastructure health to user traffic trends — this API suite delivers the critical, real-time data needed for comprehensive network monitoring, strategic performance optimization, and effective early warning systems.
 
     # Introduction
 
-    the Network Traffic Analysis API utilizes DPI collection technology to capture communication traffic between all services or terminals within the network. 
-    By correlating service-specific data with devices and port resources, it aggregates and calculates the traffic flow for each service, thereby deriving service-based traffic distribution across the entire network. 
+    the Network Traffic Analysis API utilizes DPI collection technology to capture communication traffic between all services or terminals within the network.
+    By correlating service-specific data with devices and port resources, it aggregates and calculates the traffic flow for each service, thereby deriving service-based traffic distribution across the entire network.
     This data helps identify high-traffic services and traffic load conditions during different time periods, facilitating the provision of appropriate bandwidth for critical services through slicing technology, ultimately enabling efficient utilization of network resources.
 
     # API functionality
