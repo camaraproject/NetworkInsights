@@ -2,13 +2,13 @@ openapi: 3.0.3
 info:
   title: Network Health Assessment
   description: |
-    Network Insight offers a unified analytical platform for specific networks, such as private networks and slices, focusing exclusively on aggregated network-level data rather than individual device information. 
-    It empowers users to both evaluate the overall network health through a comprehensive, component-based scoring system and to analyze service traffic patterns with customizable granularity. 
+    Network Insight offers a unified analytical platform for specific networks, such as private networks and slices, focusing exclusively on aggregated network-level data rather than individual device information.
+    It empowers users to both evaluate the overall network health through a comprehensive, component-based scoring system and to analyze service traffic patterns with customizable granularity.
     By providing a holistic view — from infrastructure health to user traffic trends — this API suite delivers the critical, real-time data needed for comprehensive network monitoring, strategic performance optimization, and effective early warning systems.
 
     # Introduction
 
-    This API allows users to query the health score of a specified network, which consists of multiple components including the wireless network, transmission network, and core network. 
+    This API allows users to query the health score of a specified network, which consists of multiple components including the wireless network, transmission network, and core network.
     By calculating the health score for each component and then applying weighted calculations, the API provides a comprehensive health score result for the specified network.
 
     # API functionality
@@ -35,8 +35,7 @@ info:
 
     Please refer to the `CAMARA_common.yaml` of the Commonalities Release associated to this API version for a complete list of error responses. The applicable Commonalities Release can be identified in the `API Readiness Checklist` document associated to this API version.
 
-    As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
-  
+    As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.  
   version: 0.1.0-rc.1
   contact:
     email: sp-network-insights@lists.camaraproject.org
