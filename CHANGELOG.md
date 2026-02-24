@@ -22,7 +22,7 @@ This release contains the definition and documentation of
 
 The API definition(s) are based on
 
-- Commonalities v0.6.1
+- Commonalities v0.7.0
 - Identity and Consent Management v0.4.0
 ## network-health-assessment v0.1.0
 
