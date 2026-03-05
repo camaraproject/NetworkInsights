@@ -1,4 +1,4 @@
-Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation network_traffic_analysis
+Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation getTrafficAnalysis
 
     # Input to be provided by the implementation to the tester
     #
@@ -18,7 +18,7 @@ Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation network_tra
 
   Background: Common network_traffic_analysis setup
     Given an environment at "apiRoot"
-    And the resource "/ecop-boss/api/networkTrafficAnalysis/v0"
+    And the resource "/network-traffic-analysis/v0.1rc1/traffic-analysis"
     And the header "SignatureNonce" is set to a Universally Unique Identifier (UUID) for the specific item
     And the header "Version" is set to a date in yyyy-MM-dd format
     And the header "AccessKeyId" is set to a customer’s account name on the network management platform
