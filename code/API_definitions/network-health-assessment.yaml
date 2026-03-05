@@ -64,7 +64,7 @@ paths:
       description: |
         Query the health assessment results of the network.
         - The health score at the latest time point.
-      operationId: struct
+      operationId: network_score_lastest
       security:
         - openId:
             - network-insights:score:check
