@@ -16,7 +16,7 @@ Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation getTrafficA
     #
     # References to OAS spec schemas refer to schemas specifies in network-traffic-analysis.yaml, version v0.1.0-rc.1
 
-  Background: Common network_traffic_analysis setup
+  Background: Common getTrafficAnalysis setup
     Given an environment at "apiRoot"
     And the resource "/network-traffic-analysis/v0.1rc1/traffic-analysis"
     And the header "SignatureNonce" is set to a Universally Unique Identifier (UUID) for the specific item
@@ -29,28 +29,28 @@ Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation getTrafficA
     And the "period" parameter specifies the network structure type. Period for the analysis ('DAY', 'HOUR', etc.)
 # Success scenarios
 
-  @network_traffic_analysis_01_generic_success_scenario
+  @network_traffic_analysis_getTrafficAnalysis_01_generic_success_scenario
   Scenario: Common validations for any success scenario
     Given startTime, endTime, period
-    When the request "network_traffic_analysis" is sent
+    When the request "getTrafficAnalysis" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response body definition refer to "/paths/network_traffic_analysis/get/responses/200"
 
-  @network_traffic_analysis_02_missing_header_parameter_scenario
+  @network_traffic_analysis_getTrafficAnalysis_02_missing_header_parameter_scenario
   Scenario: Error response for missing required header parameter
     Any of the following parameters is missing from the request headers: SignatureNonce, Version, AccessKeyId, Timestamp, Signature.
-    When the request "network_traffic_analysis" is sent
+    When the request "getTrafficAnalysis" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 400
     And the response property "$.data" is null
     And the response property "$.message" is "Required header 'XXX' is not present."
 
-  @network_traffic_analysis_03_authentication_failed_scenario
+  @network_traffic_analysis_getTrafficAnalysis_03_authentication_failed_scenario
   Scenario: Error response for authentication failed
     The request headers either fail to comply with the signature algorithm logic, or the timestamp deviation exceeds 10 minutes
-    When the request "network_traffic_analysis" is sent
+    When the request "getTrafficAnalysis" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 400
