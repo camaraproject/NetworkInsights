@@ -1,17 +1,17 @@
 Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation getTrafficAnalysis
 
     # Get the results of network analysis
-	
+
     # Input to be provided by the implementation to the tester
-	
+
 	# Implementation indications:
 	# * apiRoot: API root of the server URL
-	
+
     # * Min start and end dates allowed
     # * Max requested time period allowed
     # * Max size of the response(Combination of starttime, endtime requested) supported for a sync response
     # * Max size of the response(Combination of starttime, endtime requested) supported for an async response
-	
+
     # References to OAS spec schemas refer to schemas specifies in network-traffic-analysis.yaml, version v0.1.0-rc.1
 
   Background: Common getTrafficAnalysis setup
@@ -21,7 +21,7 @@ Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation getTrafficA
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
     And the "networkId" parameter is set by default to a idexisting network id of the customer
-	  And the "serviceTime" parameter is set as the time period that the customer needs to analyze, including the start time and the end time
+	And the "serviceTime" parameter is set as the time period that the customer needs to analyze, including the start time and the end time
     And the "period" parameter is set by the interval time for network analysis, enumeration types. such as DAY, HOUR, etc
 
 # Success scenarios
@@ -38,7 +38,7 @@ Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation getTrafficA
   @network_traffic_analysis_getTrafficAnalysis_02_invalid_argument_scenario
   Scenario: Error response for invalid argument in request body
     Given the request body property argument is invalid, such as illegal character and format error
-	  When the request "getTrafficAnalysis" is sent
+	When the request "getTrafficAnalysis" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -79,7 +79,7 @@ Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation getTrafficA
     And the response property "$.status" is 403
     And the response property "$.code" is "PERMISSION_DENIED"
     And the response property "$.message" contains a user friendly text
-	
+
   @network_traffic_analysis_getTrafficAnalysis_06_not_found_scenario
   Scenario: Not found
     Given parameters in the correct format, but the network id cannot be found
