@@ -1,159 +1,202 @@
 openapi: 3.0.3
 info:
   title: Network Health Assessment
-  x-camara-commonalities: 0.7
   description: |
     Network Insight offers a unified analytical platform for specific networks, such as private networks and slices, focusing exclusively on aggregated network-level data rather than individual device information.
     It empowers users to both evaluate the overall network health through a comprehensive, component-based scoring system and to analyze service traffic patterns with customizable granularity.
     By providing a holistic view — from infrastructure health to user traffic trends — this API suite delivers the critical, real-time data needed for comprehensive network monitoring, strategic performance optimization, and effective early warning systems.
-
+    
     # Introduction
-
     This API allows users to query the health score of a specified network, which consists of multiple components including the wireless network, transmission network, and core network.
     By calculating the health score for each component and then applying weighted calculations, the API provides a comprehensive health score result for the specified network.
-
+    
     # API functionality
-
     The API provides the following functionality:
-    - Query the health scores of different network modules in the specify network at the latest point in time.
-
+    - Query the health scores of different network modules in the specified network at the latest point in time.
+    
     # Request Parameters Definition:
-    * **module**: Modules within the network. Optional parameters are: net (the entire network), net_wireless (wireless network), net_transnet (transport network), net_core (core network).
-
+    * **networkId**: Unique identifier of the Assessment network (UUID format).
+    * **netType**: Modules within the network. Optional values are: net (the entire network), net_wireless (wireless network), net_transnet (transport network), net_core (core network).
+    
     # Authorization and authentication
-
     The "Camara Security and Interoperability Profile" provides details of how an API consumer requests an access token. Please refer to Identity and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the profile.
-
+    
     The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the API consumer and the API provider, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
-
+    
     In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
-
+    
     This API requires users to provide user information via request header signature authentication. By using the AccessKeyId (user account), SignatureNonce (random unique identifier), Version (date identifier), Timestamp (timestamp), and Signature (calculated from other request headers using an encryption algorithm) fields in the request headers, the API verifies the Signature. Upon verification, the API accepts the value in AccessKeyId as the user identity to match user data.
-
+    
     # Additional CAMARA error responses
-
     The list of error codes in this API specification is not exhaustive. Therefore the API specification may not document some non-mandatory error statuses as indicated in `CAMARA API Design Guide`.
-
+    
     Please refer to the `CAMARA_common.yaml` of the Commonalities Release associated to this API version for a complete list of error responses. The applicable Commonalities Release can be identified in the `API Readiness Checklist` document associated to this API version.
-
-    As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
   version: 0.1.0-rc.1
-  contact:
-    email: sp-network-insights@lists.camaraproject.org
+  x-camara-commonalities: "0.7"
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
+  contact:
+    name: Network Insight Support
+    email: support@network-insight.example.com
 externalDocs:
   description: Project documentation at CAMARA
   url: https://github.com/camaraproject/NetworkInsights
 servers:
-  - url: '{apiRoot}/network-health-assessment/v0.1rc1'
+  - url: "{apiRoot}/network-health-assessment/v0.1rc1"
     variables:
       apiRoot:
         default: http://localhost:9091
-        description: API root
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
-  - name: Network lastest Score
-    description: This API allows users to query the health score of a specified network, which consists of multiple components including the wireless network, transmission network, and core network. By calculating the health score for each component and then applying weighted calculations, the API provides a comprehensive health score result for the specified network.
+  - name: NetworkHealthAssessment
+    description: Query Network Health Assessment scores for specific network modules.
 paths:
-  /network-score-lastest:
-    get:
+  /health-scores:
+    post:
       tags:
-        - Network lastest Score
-      summary: Query the latest time point network health score.
+        - NetworkHealthAssessment
+      summary: Query the latest network health score
       description: |
-        Query the health assessment results of the network.
-        - The health score at the latest time point.
-      operationId: network_score_lastest
+        Query the health assessment results of the specified network module at the latest time point.
+        - Returns the health score (0-100) for the selected network module.
+      operationId: getHealthScores
       security:
         - openId:
-            - network-insights:score:check
+            - network-insights:health-assessment:read
       parameters:
-        - in: header
-          name: SignatureNonce
-          required: true
-          description: A Universally Unique Identifier (UUID) for the specific item.
-          schema:
-            type: string
-        - in: header
-          name: Version
-          required: true
-          description: The date in yyyy-MM-dd format.
-          schema:
-            type: string
-        - in: header
-          name: AccessKeyId
-          required: true
-          description: The customer’s account name on the network management platform.
-          schema:
-            type: string
-        - in: header
-          name: Timestamp
-          required: true
-          description: The timestamp of the event in UTC.
-          schema:
-            type: string
-        - in: header
-          name: Signature
-          required: true
-          description: An encrypted result string generated from other request headers and a secret key, used for request validation.
-          schema:
-            type: string
-        - in: query
-          name: structCode
-          required: true
-          description: module of Network
-          schema:
-            type: string
-            enum: [net, net_wireless, net_transnet, net_core]
-            example: net_wireless
+        - $ref: "#/components/parameters/XCorrelator"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - networkId
+                - netType
+              properties:
+                networkId:
+                  $ref: "#/components/schemas/NetworkId"
+                netType:
+                  $ref: "#/components/schemas/NetTypeEnum"
+            examples:
+              NET:
+                value:
+                  networkId: "123e4567-e89b-12d3-a456-426614174000"
+                  netType: "net"
+              NET_WIRELESS:
+                value:
+                  networkId: "123e4567-e89b-12d3-a456-426614174000"
+                  netType: "net_wireless"
       responses:
-        '200':
-          description: Successful response with the network score struct.
+        "200":
+          description: Health score queried successfully
+          headers:
+            X-Correlator:
+              $ref: "#/components/headers/X-Correlator"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    description: The status code of the response.
-                  message:
-                    type: string
-                    description: A message indicating the success of the query.
-                  data:
-                    type: object
-                    properties:
-                      time:
-                        type: string
-                        description: The time of the score create.
-                      valid:
-                        type: integer
-                        description: The validity of the score.
-                      value:
-                        type: string
-                        description: The score of the health.
-        '400':
-          $ref: '#/components/responses/Generic400'
+                $ref: "#/components/schemas/HealthInfo"
+              examples:
+                RESPONSE_NET:
+                  $ref: "#/components/examples/RESPONSE_NET"
+                RESPONSE_NET_WIRELESS:
+                  $ref: "#/components/examples/RESPONSE_NET_WIRELESS"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/Generic404"
+
 components:
   securitySchemes:
     openId:
+      description: Bearer authentication for notifications (example OpenID Connect endpoint)
       type: openIdConnect
-      description: Common security scheme for all CAMARA APIs
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
-  headers:
-    x-correlator:
+
+  parameters:
+    XCorrelator:
+      name: X-Correlator
+      in: header
       description: Correlation id for the different services
       schema:
         $ref: "#/components/schemas/XCorrelator"
+
+  headers:
+    X-Correlator:
+      description: Correlation id for the different services
+      schema:
+        $ref: "#/components/schemas/XCorrelator"
+
   schemas:
     XCorrelator:
+      title: XCorrelator
+      description: Value for the X-Correlator header
       type: string
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
       example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+
+    NetworkId:
+      description: Network ID in UUID format (unique identifier of the analyzed network)
+      type: string
+      format: uuid
+      example: "123e4567-e89b-12d3-a456-426614174000"
+
+    Score:
+      title: HealthScore
+      description: Value of the health score (0-100, higher is better)
+      type: number
+      format: double
+      minimum: 0
+      maximum: 100
+      example: 94.56
+
+    HealthInfo:
+      title: NetworkHealthInfo
+      description: Network health score information
+      allOf:
+        - type: object
+          properties:
+            networkId:
+              type: string
+              format: uuid
+              description: Unique identifier of the Assessment network
+              example: "123e4567-e89b-12d3-a456-426614174000"
+            netType:
+              $ref: "#/components/schemas/NetTypeEnum"
+            score:
+              $ref: "#/components/schemas/Score"
+            queryTime:
+              type: string
+              format: date-time
+              description: Latest time point of the health score calculation
+              example: "2025-12-01T12:00:00Z"
+          required:
+            - networkId
+            - netType
+            - score
+            - queryTime
+
+    NetTypeEnum:
+      title: NetworkModuleType
+      description: Enums of network module types
+      type: string
+      enum:
+        - net
+        - net_wireless
+        - net_transnet
+        - net_core
+      example: "net"
+
     ErrorInfo:
       type: object
-      description: Error information
+      description: Generic error response structure (compliant with CAMARA common specs)
       required:
         - status
         - code
@@ -164,18 +207,129 @@ components:
           description: HTTP response status code
         code:
           type: string
-          description: A human-readable code to describe the error
+          description: Machine-readable error code (CAMARA standard)
         message:
           type: string
-          description: A human-readable description of what the event represents
+          description: Detailed human-readable error description
+
   responses:
     Generic400:
-      description: Problem with the client request
+      description: Bad Request
+      headers:
+        X-Correlator:
+          $ref: '#/components/headers/X-Correlator'
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorInfo'
-          example:
-            status: 400
-            code: UNAUTHENTICATED
-            message: "Example of missing required query parameter"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum: [400]
+                  code:
+                    enum: ["INVALID_ARGUMENT", "OUT_OF_RANGE"]
+          examples:
+            InvalidArgument:
+              description: Invalid request parameter/body
+              value:
+                status: 400
+                code: "INVALID_ARGUMENT"
+                message: Client specified an invalid argument, request body or query param.
+            OutOfRange:
+              description: Parameter value outside valid range
+              value:
+                status: 400
+                code: "OUT_OF_RANGE"
+                message: Client specified an invalid range (e.g. end time before start time).
+    Generic401:
+      description: Unauthorized
+      headers:
+        X-Correlator:
+          $ref: '#/components/headers/X-Correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum: [401]
+                  code:
+                    enum: ["UNAUTHENTICATED"]
+          examples:
+            Unauthenticated:
+              description: Missing/invalid/expired credentials
+              value:
+                status: 401
+                code: "UNAUTHENTICATED"
+                message: Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required.
+    Generic403:
+      description: Forbidden
+      headers:
+        X-Correlator:
+          $ref: '#/components/headers/X-Correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum: [403]
+                  code:
+                    enum: ["PERMISSION_DENIED"]
+          examples:
+            PermissionDenied:
+              description: Insufficient scope/permissions
+              value:
+                status: 403
+                code: "PERMISSION_DENIED"
+                message: Client does not have sufficient permissions to perform this action.
+    Generic404:
+      description: Not Found
+      headers:
+        X-Correlator:
+          $ref: '#/components/headers/X-Correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum: [404]
+                  code:
+                    enum: ["NOT_FOUND"]
+          examples:
+            NetworkIdNotFound:
+              description: Specified networkId does not exist
+              value:
+                status: 404
+                code: "NOT_FOUND"
+                message: The specified networkId does not exist in the system.
+
+  examples:
+    NET:
+      value:
+        networkId: "123e4567-e89b-12d3-a456-426614174000"
+        netType: "net"
+    NET_WIRELESS:
+      value:
+        networkId: "123e4567-e89b-12d3-a456-426614174000"
+        netType: "net_wireless"
+    RESPONSE_NET:
+      value:
+        networkId: "123e4567-e89b-12d3-a456-426614174000"
+        netType: "net"
+        score: 94.56
+        queryTime: "2025-12-01T12:00:00Z"
+    RESPONSE_NET_WIRELESS:
+      value:
+        networkId: "123e4567-e89b-12d3-a456-426614174000"
+        netType: "net_wireless"
+        score: 90.12
+        queryTime: "2025-12-01T12:00:00Z"
