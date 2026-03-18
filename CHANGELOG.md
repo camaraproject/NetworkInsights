@@ -23,7 +23,7 @@ This release contains the definition and documentation of
 The API definition(s) are based on
 
 - Commonalities v0.7.0
-- Identity and Consent Management v0.4.0
+- Identity and Consent Management v0.5.0
 ## network-health-assessment v0.1.0
 
 **network-health-assessment v0.1.0-rc.1 and network-traffic-analysis v0.1.0-rc.1 is first public release version of the network-health-assessment API**
