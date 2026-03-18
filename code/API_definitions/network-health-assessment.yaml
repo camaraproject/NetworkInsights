@@ -43,9 +43,6 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  contact:
-    name: Network Insight Support
-    email: support@network-insight.example.com
 externalDocs:
   description: Project documentation at CAMARA
   url: https://github.com/camaraproject/NetworkInsights
