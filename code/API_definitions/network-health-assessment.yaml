@@ -70,7 +70,7 @@ paths:
       operationId: getHealthScores
       security:
         - openId:
-            - network-insights:health-assessment:read
+            - network-insights:health-scores:read
       parameters:
         - $ref: "#/components/parameters/XCorrelator"
       requestBody:
