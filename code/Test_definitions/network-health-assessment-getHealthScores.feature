@@ -80,7 +80,7 @@ Feature: CAMARA Network Health Assessment API v0.1.0-rc.1 - Operation getHealthS
     And the response property "$.status" is 403
     And the response property "$.code" is "PERMISSION_DENIED"
     And the response property "$.message" contains a user friendly text
-  
+
   @network_health_assessment_getHealthScores_06_not_found_scenario
   Scenario: Not found
     Given parameters in the correct format, but the network id cannot be found
