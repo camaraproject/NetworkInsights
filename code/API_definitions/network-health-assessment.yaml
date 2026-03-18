@@ -10,13 +10,20 @@ info:
     This API allows users to query the health score of a specified network, which consists of multiple components including the wireless network, transmission network, and core network.
     By calculating the health score for each component and then applying weighted calculations, the API provides a comprehensive health score result for the specified network.
 
+    The health score is a value evaluated by the platform based on the performance/fault indicator status of a specific network module, ranging from 0 to 100. Scores above 90 are considered excellent/healthy, 
+    scores between 60 and 80 indicate varying degrees of issues, and scores below 60 mean the network is basically unable to provide normal services. 
+    A specified network contains different network modules, such as wireless networks, transport networks, and core networks. 
+    The “netType” parameter can be used to query the health assessment of the corresponding network module or the entire network. 
+    The health assessment mechanism periodically evaluates the performance and alarm data of network devices and generates reports. 
+    This API provides the latest report results by default.
+
     # API functionality
     The API provides the following functionality:
     - Query the health scores of different network modules in the specified network at the latest point in time.
 
     # Request Parameters Definition:
     * **networkId**: Unique identifier of the Assessment network (UUID format).
-    * **netType**: Modules within the network. Optional values are: net (the entire network), net_wireless (wireless network), net_transnet (transport network), net_core (core network).
+    * **netType**: Modules within the network. Optional values are: NET (the entire network), NET_WIRELESS (wireless network), NET_TRANSNET (transport network), NET_CORE (core network).
 
     # Authorization and authentication
     The "Camara Security and Interoperability Profile" provides details of how an API consumer requests an access token. Please refer to Identity and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the profile.
@@ -84,11 +91,11 @@ paths:
               NET:
                 value:
                   networkId: "123e4567-e89b-12d3-a456-426614174000"
-                  netType: "net"
+                  netType: "NET"
               NET_WIRELESS:
                 value:
                   networkId: "123e4567-e89b-12d3-a456-426614174000"
-                  netType: "net_wireless"
+                  netType: "NET_WIRELESS"
       responses:
         "200":
           description: Health score queried successfully
@@ -188,11 +195,11 @@ components:
       description: Enums of network module types
       type: string
       enum:
-        - net
-        - net_wireless
-        - net_transnet
-        - net_core
-      example: "net"
+        - NET
+        - NET_WIRELESS
+        - NET_TRANSNET
+        - NET_CORE
+      example: "NET"
 
     ErrorInfo:
       type: object
@@ -316,20 +323,20 @@ components:
     NET:
       value:
         networkId: "123e4567-e89b-12d3-a456-426614174000"
-        netType: "net"
+        netType: "NET"
     NET_WIRELESS:
       value:
         networkId: "123e4567-e89b-12d3-a456-426614174000"
-        netType: "net_wireless"
+        netType: "NET_WIRELESS"
     RESPONSE_NET:
       value:
         networkId: "123e4567-e89b-12d3-a456-426614174000"
-        netType: "net"
+        netType: "NET"
         score: 94.56
         queryTime: "2025-12-01T12:00:00Z"
     RESPONSE_NET_WIRELESS:
       value:
         networkId: "123e4567-e89b-12d3-a456-426614174000"
-        netType: "net_wireless"
+        netType: "NET_WIRELESS"
         score: 90.12
         queryTime: "2025-12-01T12:00:00Z"
