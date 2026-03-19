@@ -121,7 +121,6 @@ paths:
 components:
   securitySchemes:
     openId:
-      description: Bearer authentication for notifications (example OpenID Connect endpoint)
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
 
