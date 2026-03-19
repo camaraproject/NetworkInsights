@@ -141,7 +141,6 @@ components:
 
   schemas:
     XCorrelator:
-      title: XCorrelator
       description: Value for the x-correlator header
       type: string
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
