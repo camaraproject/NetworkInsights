@@ -61,9 +61,9 @@ paths:
       operationId: getTrafficAnalysis
       security:
         - openId:
-            - network-insights:traffic-analysis:read
+            - network-traffic-analysis:traffic-analysis:read
       parameters:
-        - $ref: "#/components/parameters/XCorrelator"
+        - $ref: "#/components/parameters/x-correlator"
       requestBody:
         required: true
         content:
@@ -119,15 +119,15 @@ components:
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
 
   parameters:
-    XCorrelator:
-      name: X-Correlator
+    x-correlator:
+      name: x-correlator
       in: header
       description: Correlation id for the different services
       schema:
-        $ref: "#/components/schemas/XCorrelator"
+        $ref: "#/components/schemas/x-correlator"
 
   headers:
-    X-Correlator:
+    x-correlator:
       description: Correlation id for the different services
       schema:
         $ref: "#/components/schemas/XCorrelator"
