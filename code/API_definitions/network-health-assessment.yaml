@@ -54,13 +54,13 @@ servers:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
-  - name: NetworkHealthAssessment
+  - name: Network Health Assessment
     description: Query Network Health Assessment scores for specific network modules.
 paths:
   /health-scores:
     post:
       tags:
-        - NetworkHealthAssessment
+        - Network Health Assessment
       summary: Query the latest network health score
       description: |
         Query the health assessment results of the specified network module at the latest time point.
