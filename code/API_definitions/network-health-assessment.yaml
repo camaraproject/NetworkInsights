@@ -122,7 +122,6 @@ components:
   securitySchemes:
     openId:
       type: openIdConnect
-      description:
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
 
   parameters:
