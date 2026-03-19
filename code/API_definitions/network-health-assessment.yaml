@@ -70,7 +70,7 @@ paths:
         - openId:
             - network-health-assessment:health-scores:read
       parameters:
-        - $ref: "#/components/parameters/XCorrelator"
+        - $ref: "#/components/parameters/x-correlator"
       requestBody:
         required: true
         content:
