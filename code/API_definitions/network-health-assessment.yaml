@@ -140,7 +140,7 @@ components:
         $ref: "#/components/schemas/XCorrelator"
 
   schemas:
-    x-correlator:
+    XCorrelator:
       title: XCorrelator
       description: Value for the x-correlator header
       type: string
