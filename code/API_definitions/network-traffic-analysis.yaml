@@ -277,7 +277,7 @@ components:
       description: Bad Request
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -286,27 +286,37 @@ components:
               - type: object
                 properties:
                   status:
-                    enum: [400]
+                    enum:
+                      - 400
                   code:
-                    enum: ["INVALID_ARGUMENT", "OUT_OF_RANGE"]
+                    enum:
+                      - INVALID_ARGUMENT
+                      - OUT_OF_RANGE
+                      - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_400_INVALID_ARGUMENT:
-              description: Invalid request parameter/body
+              description: Invalid Argument. Generic Syntax Exception
               value:
                 status: 400
-                code: "INVALID_ARGUMENT"
+                code: INVALID_ARGUMENT
                 message: Client specified an invalid argument, request body or query param.
             GENERIC_400_OUT_OF_RANGE:
-              description: Parameter value outside valid range
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
               value:
                 status: 400
-                code: "OUT_OF_RANGE"
-                message: Client specified an invalid range
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
+            GENERIC_400_{{SPECIFIC_CODE}}:
+              description: Specific Syntax Exception regarding a field that is relevant in the context of the API
+              value:
+                status: 400
+                code: "{{SPECIFIC_CODE}}"
+                message: Message for specific code
     Generic401:
       description: Unauthorized
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -315,21 +325,23 @@ components:
               - type: object
                 properties:
                   status:
-                    enum: [401]
+                    enum:
+                      - 401
                   code:
-                    enum: ["UNAUTHENTICATED"]
+                    enum:
+                      - UNAUTHENTICATED
           examples:
             GENERIC_401_UNAUTHENTICATED:
-              description: Missing/invalid/expired credentials
+              description: Request cannot be authenticated and a new authentication is required
               value:
                 status: 401
-                code: "UNAUTHENTICATED"
+                code: UNAUTHENTICATED
                 message: Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required.
     Generic403:
       description: Forbidden
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -338,21 +350,37 @@ components:
               - type: object
                 properties:
                   status:
-                    enum: [403]
+                    enum:
+                      - 403
                   code:
-                    enum: ["PERMISSION_DENIED"]
+                    enum:
+                      - PERMISSION_DENIED
+                      - INVALID_TOKEN_CONTEXT
+                      - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_403_PERMISSION_DENIED:
-              description: Insufficient scope/permissions
+              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
               value:
                 status: 403
-                code: "PERMISSION_DENIED"
+                code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
+            GENERIC_403_INVALID_TOKEN_CONTEXT:
+              description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
+              value:
+                status: 403
+                code: INVALID_TOKEN_CONTEXT
+                message: "{{field}} is not consistent with access token."
+            GENERIC_403_{{SPECIFIC_CODE}}:
+              description: Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API
+              value:
+                status: 403
+                code: "{{SPECIFIC_CODE}}"
+                message: Message for specific code
     Generic404:
-      description: Not Found
+      description: Not found
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -361,16 +389,32 @@ components:
               - type: object
                 properties:
                   status:
-                    enum: [404]
+                    enum:
+                      - 404
                   code:
-                    enum: ["NOT_FOUND"]
+                    enum:
+                      - NOT_FOUND
+                      - IDENTIFIER_NOT_FOUND
+                      - "{{SPECIFIC_CODE}}"
           examples:
             GENERIC_404_NOT_FOUND:
-              description: Specified networkId does not exist
+              description: Resource is not found
               value:
                 status: 404
-                code: "NOT_FOUND"
-                message: The specified networkId does not exist in the system.
+                code: NOT_FOUND
+                message: The specified resource is not found.
+            GENERIC_404_IDENTIFIER_NOT_FOUND:
+              description: Some identifier cannot be matched to a device
+              value:
+                status: 404
+                code: IDENTIFIER_NOT_FOUND
+                message: Device identifier not found.
+            GENERIC_404_{{SPECIFIC_CODE}}:
+              description: Specific situation to highlight the resource/concept not found
+              value:
+                status: 404
+                code: "{{SPECIFIC_CODE}}"
+                message: Message for specific code
 
   examples:
     TrafficAnalysisSuccess:
