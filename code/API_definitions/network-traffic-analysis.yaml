@@ -251,7 +251,7 @@ components:
 
     ErrorInfo:
       type: object
-      description: Generic error response structure (compliant with CAMARA common specs)
+      description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
       required:
         - status
         - code
@@ -259,13 +259,18 @@ components:
       properties:
         status:
           type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
           description: HTTP response status code
         code:
           type: string
-          description: Machine-readable error code (CAMARA standard)
+          maxLength: 96
+          description: A human-readable code to describe the error
         message:
           type: string
-          description: Detailed human-readable error description
+          maxLength: 512
+          description: A human-readable description of what the event represents
 
   responses:
     Generic400:
