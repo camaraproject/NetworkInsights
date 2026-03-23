@@ -2,6 +2,7 @@ Feature: CAMARA Network Health Assessment API v0.1.0-rc.1 - Operation getHealthS
 
     # Input to be provided by the implementation to the tester
     #
+    #
     # Implementation indications:
     # * Min start and end dates allowed
     # * Max requested time period allowed
