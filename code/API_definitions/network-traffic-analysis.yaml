@@ -1,107 +1,107 @@
 openapi: 3.0.3
 info:
   title: Network Traffic Analysis
-  description: API to analyze traffic on a specified network.
-  version: wip
-  contact:
-    email: sp-network-insights@lists.camaraproject.org
+  description: |
+    Network Insight offers a unified analytical platform for specific networks, such as private networks and slices, focusing exclusively on aggregated network-level data rather than individual device information.
+    It empowers users to both evaluate the overall network health through a comprehensive, component-based scoring system and to analyze service traffic patterns with customizable granularity.
+    By providing a holistic view-from infrastructure health to user traffic trends-this API suite delivers the critical, real-time data needed for comprehensive network monitoring, strategic performance optimization, and effective early warning systems.
+
+    # Introduction
+    The Network Traffic Analysis API utilizes DPI collection technology to capture communication traffic between all services or terminals within the network.
+    By correlating service-specific data with devices and port resources, it aggregates and calculates the traffic flow for each service, thereby deriving service-based traffic distribution across the entire network.
+    This data helps identify high-traffic services and traffic load conditions during different time periods, facilitating the provision of appropriate bandwidth for critical services through slicing technology, ultimately enabling efficient utilization of network resources.
+
+    # API functionality
+    The API provides the following functionality:
+    - It allows users to directly query access traffic statistics for all services within a specified time period, including the number of accesses and the cumulative values of uplink and downlink traffic.
+
+    # Request Parameters Definition:
+    * **networkId**: Unique identifier of the analyzed network (UUID format).
+    * **serviceTime**: Time range for network analysis (start + end time, RFC 3339 with timezone). Pass as JSON string in query param.
+    * **period**: Analysis granularity (enumeration: 'DAY', 'HOUR').
+
+    # Authorization and authentication
+    The "Camara Security and Interoperability Profile" provides details of how an API consumer requests an access token. Please refer to Identity and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the profile.
+
+    The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the API consumer and the API provider, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
+
+    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
+
+    This API requires users to provide user information via request header signature authentication. By using the AccessKeyId (user account), SignatureNonce (random unique identifier), Version (date identifier), Timestamp (timestamp), and Signature (calculated from other request headers using an encryption algorithm) fields in the request headers, the API verifies the Signature. Upon verification, the API accepts the value in AccessKeyId as the user identity to match user data.
+
+    # Additional CAMARA error responses
+    The list of error codes in this API specification is not exhaustive. Therefore the API specification may not document some non-mandatory error statuses as indicated in `CAMARA API Design Guide`.
+
+    Please refer to the `CAMARA_common.yaml` of the Commonalities Release associated to this API version for a complete list of error responses. The applicable Commonalities Release can be identified in the `API Readiness Checklist` document associated to this API version.
+    As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
+  version: 0.1.0-rc.1
+  x-camara-commonalities: "0.7"
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 externalDocs:
-  description: Project documentation at CAMARA.
+  description: Project documentation at CAMARA
   url: https://github.com/camaraproject/NetworkInsights
 servers:
-  - url: '{apiRoot}/ecop-boss/api/networkTrafficAnalysis/vwip'
+  - url: "{apiRoot}/network-traffic-analysis/v0.1rc1"
     variables:
       apiRoot:
-        default: http://localhost:9091
-        description: API root
+        default: http://localhost:9100
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
   - name: Network Traffic Analysis
-    description: The API allows API consumers to query 5G traffic statistics information for a specified network user.
+    description: The API allows API consumers to query 5G traffic statistics information for aggregated network-level data.
 paths:
   /traffic-analysis:
-    get:
+    post:
       tags:
         - Network Traffic Analysis
       summary: Get network traffic analysis
       description: |
-        Query 5G traffic statistics information for a specified network user
+        Query 5G traffic statistics information for aggregated network-level data.
       operationId: getTrafficAnalysis
+      security:
+        - openId:
+            - network-traffic-analysis:traffic-analysis:read
       parameters:
-        - in: header
-          name: SignatureNonce
-          required: true
-          description: A Universally Unique Identifier (UUID) for the specific item.
-          schema:
-            type: string
-        - in: header
-          name: Version
-          required: true
-          description: The date in yyyy-MM-dd format.
-          schema:
-            type: string
-        - in: header
-          name: AccessKeyId
-          required: true
-          description: The customer’s account name on the network management platform.
-          schema:
-            type: string
-        - in: header
-          name: Timestamp
-          required: true
-          description: The timestamp of the event in UTC.
-          schema:
-            type: string
-        - in: header
-          name: Signature
-          required: true
-          description: An encrypted result string generated from other request headers and a secret key, used for request validation.
-          schema:
-            type: string
-        - name: startTime
-          in: query
-          required: true
-          description: Start time for the analysis in the format 'YYYY-MM-DD HH:mm:ss'
-          schema:
-            type: string
-        - name: endTime
-          in: query
-          required: true
-          description: End time for the analysis in the format 'YYYY-MM-DD HH:mm:ss'
-          schema:
-            type: string
-        - name: domainId
-          in: query
-          description: Domain ID (optional)
-          schema:
-            type: string
-        - name: period
-          in: query
-          required: true
-          description: Period for the analysis ('DAY', 'HOUR', etc.)
-          schema:
-            type: string
-        - name: page
-          in: query
-          description: Page number for pagination (optional)
-          schema:
-            type: integer
-        - name: pageSize
-          in: query
-          description: Number of records per page for pagination (optional)
-          schema:
-            type: integer
+        - $ref: "#/components/parameters/x-correlator"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - networkId
+                - serviceTime
+                - period
+              properties:
+                networkId:
+                  $ref: "#/components/schemas/NetworkId"
+                serviceTime:
+                  $ref: "#/components/schemas/ServiceTime"
+                period:
+                  $ref: "#/components/schemas/Period"
+            examples:
+              ValidRequest:
+                value:
+                  networkId: "123e4567-e89b-12d3-a456-426614174000"
+                  serviceTime:
+                    start: "2024-06-01T12:00:00Z"
+                    end: "2024-07-01T12:00:00Z"
+                  period: "DAY"
       responses:
-        '200':
-          description: Successful operation
+        "200":
+          description: Successful response with network traffic analysis data
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TrafficAnalysisResponse'
               examples:
-                SUCCESS:
+                Success:
                   $ref: '#/components/examples/TrafficAnalysisSuccess'
         '400':
           $ref: '#/components/responses/Generic400'
@@ -109,65 +109,68 @@ paths:
           $ref: '#/components/responses/Generic401'
         '403':
           $ref: '#/components/responses/Generic403'
-        '500':
-          $ref: '#/components/responses/Generic500'
-        '503':
-          $ref: '#/components/responses/Generic503'
-        '504':
-          $ref: '#/components/responses/Generic504'
-      security:
-        - SignatureNonceAuth: []
-          VersionAuth: []
-          AccessKeyIdAuth: []
-          TimestampAuth: []
-          SignatureAuth: []
+        '404':
+          $ref: '#/components/responses/Generic404'
+
 components:
   securitySchemes:
-    SignatureNonceAuth:
-      type: apiKey
+    openId:
+      description: OpenID Connect authentication
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+
+  parameters:
+    x-correlator:
+      name: x-correlator
       in: header
-      name: SignatureNonce
-      description: A Universally Unique Identifier (UUID) for the specific item.
-    VersionAuth:
-      type: apiKey
-      in: header
-      name: Version
-      description: The date in yyyy-MM-dd format.
-    AccessKeyIdAuth:
-      type: apiKey
-      in: header
-      name: AccessKeyId
-      description: The customer’s account name on the network management platform.
-    TimestampAuth:
-      type: apiKey
-      in: header
-      name: Timestamp
-      description: The timestamp of the event in UTC.
-    SignatureAuth:
-      type: apiKey
-      in: header
-      name: Signature
-      description: |
-        Custom signature authentication.
-        Generate the encrypted signature string by combining the following request header parameters:
-        SignatureNonce, Version, AccessKeyId, Timestamp,
-        and the fixed parameters SignatureVersion (fixed: 1.0), Format (fixed: JSON),
-        and SignatureMethod (fixed: HMAC-SHA1).
-        Signature Generation Process:
-        1. URL-encode all request parameters.
-        2. Sort the parameters lexicographically by their keys.
-        3. Concatenate the sorted key-value pairs into a single string.
-        4. Prepare the signature string, which includes the HTTP method and the URL-encoded parameter string, in the format: POST&%2F&<encoded_parameters>.
-        5. Sign the string using the user’s secret key and the HMAC-SHA1 algorithm.
-        6. Encode the resulting signature using Base64.
-        Signature Verification Process:
-        1. Receive the API request, including the request parameters and the Base64-encoded signature(header:Signature).
-        2. Regenerate the signature using the same steps as in the signature generation process.
-        3. Compare the received signature with the regenerated signature.
-        4. If the two signatures match, the verification passes, indicating that the request is intact and from a trusted source.
-        5. If the signatures do not match, the verification fails, suggesting that the request may have been tampered with or an error occurred during transmission.
+      description: Correlation id for the different services
+      schema:
+        $ref: "#/components/schemas/XCorrelator"
+
+  headers:
+    x-correlator:
+      description: Correlation id for the different services
+      schema:
+        $ref: "#/components/schemas/XCorrelator"
 
   schemas:
+    XCorrelator:
+      description: Correlator string, UUID format recommended but any string matching the pattern can be used
+      type: string
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      maxLength: 256
+      example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+
+    NetworkId:
+      description: Network ID in UUID format (unique identifier of the analyzed network)
+      type: string
+      format: uuid
+      example: "123e4567-e89b-12d3-a456-426614174000"
+
+    ServiceTime:
+      type: object
+      description: Time range for network traffic analysis
+      properties:
+        start:
+          type: string
+          format: date-time
+          description: Start time of the analysis period
+          example: "2024-06-01T12:00:00Z"
+        end:
+          type: string
+          format: date-time
+          description: End time of the analysis period
+          example: "2024-07-01T12:00:00Z"
+      required:
+        - start
+        - end
+
+    Period:
+      description: Analysis granularity (time interval for aggregation)
+      type: string
+      enum: ["DAY", "HOUR"]
+      example: "DAY"
+
     TrafficAnalysisResponse:
       type: object
       description: Response schema for traffic analysis
@@ -178,64 +181,78 @@ components:
       properties:
         status:
           type: integer
-          description: HTTP response status code
+          description: HTTP response status code (matches the HTTP status code of the response)
+          example: 200
         message:
           type: string
-          description: A message describing the status
+          description: Human-readable status message
+          example: "Network traffic analysis has been completed"
         data:
           type: object
           description: Traffic analysis data
           properties:
             records:
               type: array
-              description: Array of traffic records
+              description: Array of traffic records per application
               items:
                 type: object
                 properties:
                   app:
                     type: string
                     description: Application name
+                    example: "whatsapp"
                   address:
                     type: string
-                    description: Application address
+                    description: Application server IP address
+                    example: "202.112.17.122"
                   description:
                     type: string
                     description: Application description
+                    example: "A free cross-platform app for messaging, calls, and media sharing."
                   accessCount:
                     type: integer
-                    description: Access count
+                    description: Total number of accesses to the application
+                    minimum: 0
+                    example: 150
                   accessUpFlow:
                     type: integer
-                    description: Upstream traffic flow
+                    description: Total upstream traffic (bytes)
+                    minimum: 0
+                    example: 102400  # 100 KB
                   accessDownFlow:
                     type: integer
-                    description: Downstream traffic flow
+                    description: Total downstream traffic (bytes)
+                    minimum: 0
+                    example: 204800  # 200 KB
                   accessFlow:
                     type: integer
-                    description: Total traffic flow
+                    description: Total traffic (up + down, bytes)
+                    minimum: 0
+                    example: 307200  # 300 KB
                   startTime:
                     type: string
-                    description: Start time of the record
+                    format: date-time
+                    description: Start time of the record interval
+                    example: "2024-06-07T00:00:00Z"
                   endTime:
                     type: string
-                    description: End time of the record
+                    format: date-time
+                    description: End time of the record interval
+                    example: "2024-06-07T23:59:59Z"
                   accessDate:
                     type: string
-                    description: Access date
+                    format: date
+                    description: Date of the traffic record (YYYY-MM-DD)
+                    example: "2024-06-07"
             total:
               type: integer
-              description: Total number of records
-            size:
-              type: integer
-              description: Number of records per page
-            current:
-              type: integer
-              description: Current page number
-            searchCount:
-              type: boolean
-              description: Indicates if the total count is included in the response
+              description: Total number of application records
+              minimum: 0
+              example: 22
+
     ErrorInfo:
       type: object
+      description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
       required:
         - status
         - code
@@ -243,132 +260,178 @@ components:
       properties:
         status:
           type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
           description: HTTP response status code
         code:
           type: string
-          description: Error code
+          maxLength: 96
+          description: A human-readable code to describe the error
         message:
           type: string
-          description: Detailed error description
+          maxLength: 512
+          description: A human-readable description of what the event represents
+
   responses:
     Generic400:
-      description: Problem with the client request
+      description: Bad Request
       headers:
-        X-Correlator:
-          description: Correlation id for the different services
-          schema:
-            type: string
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorInfo'
-          example:
-            status: 400
-            code: INVALID_ARGUMENT
-            message: "Client specified an invalid argument, request body or query param"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+                      - OUT_OF_RANGE
+                      - "{{SPECIFIC_CODE}}"
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
+            GENERIC_400_{{SPECIFIC_CODE}}:
+              description: Specific Syntax Exception regarding a field that is relevant in the context of the API
+              value:
+                status: 400
+                code: "{{SPECIFIC_CODE}}"
+                message: Message for specific code
     Generic401:
-      description: Authentication problem with the client request
+      description: Unauthorized
       headers:
-        X-Correlator:
-          description: Correlation id for the different services
-          schema:
-            type: string
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorInfo'
-          example:
-            status: 401
-            code: UNAUTHENTICATED
-            message: "Request not authenticated due to missing, invalid, or expired credentials"
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 401
+                  code:
+                    enum:
+                      - UNAUTHENTICATED
+          examples:
+            GENERIC_401_UNAUTHENTICATED:
+              description: Request cannot be authenticated and a new authentication is required
+              value:
+                status: 401
+                code: UNAUTHENTICATED
+                message: Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required.
     Generic403:
-      description: Authentication problem with the client request
+      description: Forbidden
       headers:
-        X-Correlator:
-          description: Correlation id for the different services
-          schema:
-            type: string
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorInfo'
-          example:
-            status: 403
-            code: PERMISSION_DENIED
-            message: "Operation not allowed: ..."
-    Generic500:
-      description: Server error
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 403
+                  code:
+                    enum:
+                      - PERMISSION_DENIED
+                      - INVALID_TOKEN_CONTEXT
+                      - "{{SPECIFIC_CODE}}"
+          examples:
+            GENERIC_403_PERMISSION_DENIED:
+              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
+              value:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action.
+            GENERIC_403_INVALID_TOKEN_CONTEXT:
+              description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
+              value:
+                status: 403
+                code: INVALID_TOKEN_CONTEXT
+                message: "{{field}} is not consistent with access token."
+            GENERIC_403_{{SPECIFIC_CODE}}:
+              description: Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API
+              value:
+                status: 403
+                code: "{{SPECIFIC_CODE}}"
+                message: Message for specific code
+    Generic404:
+      description: Not found
       headers:
-        X-Correlator:
-          description: Correlation id for the different services
-          schema:
-            type: string
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorInfo'
-          example:
-            status: 500
-            code: INTERNAL
-            message: "Internal Server error"
-    Generic503:
-      description: Service unavailable. Typically the server is down.
-      headers:
-        X-Correlator:
-          description: Correlation id for the different services
-          schema:
-            type: string
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorInfo'
-          example:
-            status: 503
-            code: UNAVAILABLE
-            message: "Service unavailable"
-    Generic504:
-      description: Request time exceeded. If it happens repeatedly, consider reducing the request complexity
-      headers:
-        X-Correlator:
-          description: Correlation id for the different services
-          schema:
-            type: string
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorInfo'
-          example:
-            status: 504
-            code: TIMEOUT
-            message: "Request timeout exceeded. Try later."
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 404
+                  code:
+                    enum:
+                      - NOT_FOUND
+                      - IDENTIFIER_NOT_FOUND
+                      - "{{SPECIFIC_CODE}}"
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+            GENERIC_404_IDENTIFIER_NOT_FOUND:
+              description: Some identifier cannot be matched to a device
+              value:
+                status: 404
+                code: IDENTIFIER_NOT_FOUND
+                message: Device identifier not found.
+            GENERIC_404_{{SPECIFIC_CODE}}:
+              description: Specific situation to highlight the resource/concept not found
+              value:
+                status: 404
+                code: "{{SPECIFIC_CODE}}"
+                message: Message for specific code
+
   examples:
     TrafficAnalysisSuccess:
       value:
         status: 200
-        message: "操作成功"
+        message: "Network traffic analysis has been completed"
         data:
           records:
-            - app: "网上业务平台"
+            - app: "whatsapp"
               address: "202.112.17.122"
-              description: "网络中心内部使用业务办理平台"
-              accessCount: 0
-              accessUpFlow: 0
-              accessDownFlow: 0
-              accessFlow: 0
-              startTime: ""
-              endTime: ""
+              description: "A free cross-platform app for messaging, calls, and media sharing."
+              accessCount: 150
+              accessUpFlow: 102400  # 100 KB
+              accessDownFlow: 204800  # 200 KB
+              accessFlow: 307200  # 300 KB
+              startTime: "2024-06-07T00:00:00Z"
+              endTime: "2024-06-07T23:59:59Z"
               accessDate: "2024-06-07"
-            - app: "网上办事大厅"
-              address: "202.38.193.135"
-              description: "网上办事大厅"
-              accessCount: 102
-              accessUpFlow: 0
-              accessDownFlow: 24
-              accessFlow: 32
-              startTime: ""
-              endTime: ""
-              accessDate: "2024-06-07"
-          # ... 其他应用数据记录 ...
           total: 22
-          size: 15
-          current: 1
