@@ -1,6 +1,3 @@
 # Changelog
 
-Release changelogs are organized by release cycle.
-
-For historical release notes predating the automated release process,
-see [CHANGELOG.md](../CHANGELOG.md) in the repository root.
+Release changelogs are organized by release cycle and will be created and updated during the automated release process (see https://github.com/camaraproject/ReleaseManagement/tree/main/documentation).
