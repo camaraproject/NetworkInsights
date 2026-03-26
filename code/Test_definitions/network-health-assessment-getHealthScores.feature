@@ -1,4 +1,4 @@
-Feature: CAMARA Network Health Assessment API v0.1.0-rc.1 - Operation getHealthScores
+Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
 
     # Input to be provided by the implementation to the tester
     #
@@ -15,11 +15,11 @@ Feature: CAMARA Network Health Assessment API v0.1.0-rc.1 - Operation getHealthS
     # * An Area outside the supported area
     # * A combination of request parameters including service area, start time, and end time, configuration information of network slicing
     #
-    # References to OAS spec schemas refer to schemas specifies in network-health-assessment.yaml, version v0.1.0-rc.1
+    # References to OAS spec schemas refer to schemas specifies in network-health-assessment.yaml, version vwip
 
   Background: Common getHealthScores setup
     Given an environment at "apiRoot"
-    And the resource "/network-health-assessment/v0.1rc1/health-scores"
+    And the resource "/network-health-assessment/vwip/health-scores"
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
