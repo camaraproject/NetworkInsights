@@ -1,4 +1,4 @@
-Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation getTrafficAnalysis
+Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
 
     # Get the results of network analysis
 
@@ -12,11 +12,11 @@ Feature: CAMARA Network Traffic Analysis API v0.1.0-rc.1 - Operation getTrafficA
     # * Max size of the response(Combination of starttime, endtime requested) supported for a sync response
     # * Max size of the response(Combination of starttime, endtime requested) supported for an async response
 
-    # References to OAS spec schemas refer to schemas specifies in network-traffic-analysis.yaml, version v0.1.0-rc.1
+    # References to OAS spec schemas refer to schemas specifies in network-traffic-analysis.yaml, version vwip
 
   Background: Common getTrafficAnalysis setup
     Given an environment at "apiRoot"
-    And the resource "/network-traffic-analysis/v0.1rc1/traffic-analysis"
+    And the resource "/network-traffic-analysis/vwip/traffic-analysis"
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
