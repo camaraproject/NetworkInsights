@@ -30,10 +30,6 @@ info:
 
     The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the API consumer and the API provider, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
 
-    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
-
-    This API requires users to provide user information via request header signature authentication. By using the AccessKeyId (user account), SignatureNonce (random unique identifier), Version (date identifier), Timestamp (timestamp), and Signature (calculated from other request headers using an encryption algorithm) fields in the request headers, the API verifies the Signature. Upon verification, the API accepts the value in AccessKeyId as the user identity to match user data.
-
     # Additional CAMARA error responses
     The list of error codes in this API specification is not exhaustive. Therefore the API specification may not document some non-mandatory error statuses as indicated in `CAMARA API Design Guide`.
 
@@ -174,10 +170,11 @@ components:
               $ref: "#/components/schemas/NetTypeEnum"
             score:
               $ref: "#/components/schemas/Score"
-            queryTime:
+            scoringTime:
               type: string
               format: date-time
-              description: Latest time point of the health score calculation
+              maxLength: 64
+              description: Latest time point of the health score calculation. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
               example: "2025-12-01T12:00:00Z"
           required:
             - networkId
