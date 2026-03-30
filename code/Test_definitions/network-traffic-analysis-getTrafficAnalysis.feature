@@ -14,13 +14,13 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
 
   Background: Common getTrafficAnalysis setup
     Given an environment at "apiRoot"
-	And the resource "/network-traffic-analysis/vwip/traffic-analysis"
-	And the header "Content-Type" is set to "application/json"
-	And the header "Authorization" is set to a valid access token
-	And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
-	And the "networkId" parameter is set by default to a valid network id
-	And the "timePeriod" parameter is set as the time period over which the API consumer wants the traffic analysis to be done, including the start time and the end time.
-	And the "frequency" parameter is set to a valid value: DAY or HOUR.
+    And the resource "/network-traffic-analysis/vwip/traffic-analysis"
+    And the header "Content-Type" is set to "application/json"
+    And the header "Authorization" is set to a valid access token
+    And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
+    And the "networkId" parameter is set by default to a valid network id
+    And the "timePeriod" parameter is set as the time period over which the API consumer wants the traffic analysis to be done, including the start time and the end time.
+    And the "frequency" parameter is set to a valid value: DAY or HOUR.
 
 # Success scenarios
 
@@ -30,8 +30,8 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     When the request "getTrafficAnalysis" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
-	And the response header "x-correlator" has same value as the request header "x-correlator
-	And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
+    And the response header "x-correlator" has same value as the request header "x-correlator
+    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
 
   @network_traffic_analysis_getTrafficAnalysis_02_invalid_argument_scenario
   Scenario: Error response for invalid argument in request body
