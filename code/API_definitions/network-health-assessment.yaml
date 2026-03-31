@@ -180,7 +180,7 @@ components:
             - networkId
             - netType
             - score
-            - queryTime
+            - scoringTime
 
     NetTypeEnum:
       title: NetworkModuleType
@@ -339,10 +339,10 @@ components:
         networkId: "123e4567-e89b-12d3-a456-426614174000"
         netType: "NET"
         score: 94.56
-        queryTime: "2025-12-01T12:00:00Z"
+        scoringTime: "2025-12-01T12:00:00Z"
     RESPONSE_EXAMPLE_NET_WIRELESS:
       value:
         networkId: "123e4567-e89b-12d3-a456-426614174000"
         netType: "NET_WIRELESS"
         score: 90.12
-        queryTime: "2025-12-01T12:00:00Z"
+        scoringTime: "2025-12-01T12:00:00Z"
