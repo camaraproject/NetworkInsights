@@ -83,8 +83,8 @@ paths:
                 value:
                   networkId: "123e4567-e89b-12d3-a456-426614174000"
                   timePeriod:
-                    start: "2024-06-01T12:00:00Z"
-                    end: "2024-07-01T12:00:00Z"
+                    startTime: "2024-06-01T12:00:00Z"
+                    endTime: "2024-07-01T12:00:00Z"
                   frequency: "DAY"
       responses:
         "200":
@@ -133,8 +133,9 @@ components:
     XCorrelator:
       description: Correlator string, UUID format recommended but any string matching the pattern can be used
       type: string
-      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      pattern: '^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$'
       maxLength: 256
+      minLength: 1
       example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
 
     NetworkId:
@@ -147,21 +148,23 @@ components:
       type: object
       description: Time range for network traffic analysis. A period of time defined by a start date and an end date
       properties:
-        start:
+        startTime:
           type: string
           format: date-time
-          maxLength: 64
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$'
+          maxLength: 30
           description: An instant of time, starting of the TimePeriod. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
           example: "2024-06-01T12:00:00Z"
-        end:
+        endTime:
           type: string
           format: date-time
-          maxLength: 64
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$'
+          maxLength: 30
           description: An instant of time, ending of the TimePeriod. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
           example: "2024-07-01T12:00:00Z"
       required:
-        - start
-        - end
+        - startTime
+        - endTime
 
     Frequency:
       description: Analysis granularity (time interval for aggregation)
@@ -232,16 +235,23 @@ components:
                     format: date-time
                     description: Start time of the record interval
                     example: "2024-06-07T00:00:00Z"
+                    pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$'
+                    maxLength: 30
                   endTime:
                     type: string
                     format: date-time
                     description: End time of the record interval
                     example: "2024-06-07T23:59:59Z"
+                    pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$'
+                    maxLength: 30
                   accessDate:
                     type: string
                     format: date
                     description: Date of the traffic record (YYYY-MM-DD)
                     example: "2024-06-07"
+                    pattern: '^\d{4}-\d{2}-\d{2}$'
+                    maxLength: 10
+                    
             total:
               type: integer
               description: Total number of application records
@@ -259,8 +269,6 @@ components:
         status:
           type: integer
           format: int32
-          minimum: 100
-          maximum: 599
           description: HTTP response status code
         code:
           type: string
