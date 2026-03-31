@@ -17,7 +17,7 @@ info:
 
     # Request Parameters Definition:
     * **networkId**: Unique identifier of the analyzed network (UUID format).
-    * **timePeriod**: Time range for network analysis (start + end time, RFC 3339 with timezone). Pass as JSON string in query param.
+    * **timePeriod**: Time range for network analysis (start + end time, RFC 3339 with timezone).
     * **frequency**: Analysis granularity (enumeration: 'DAY', 'HOUR').
 
     # Authorization and authentication
@@ -145,17 +145,19 @@ components:
 
     TimePeriod:
       type: object
-      description: Time range for network traffic analysis
+      description: Time range for network traffic analysis. A period of time defined by a start date and an end date
       properties:
         start:
           type: string
           format: date-time
-          description: Start time of the analysis period
+          maxLength: 64
+          description: An instant of time, starting of the TimePeriod. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
           example: "2024-06-01T12:00:00Z"
         end:
           type: string
           format: date-time
-          description: End time of the analysis period
+          maxLength: 64
+          description: An instant of time, ending of the TimePeriod. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
           example: "2024-07-01T12:00:00Z"
       required:
         - start
@@ -178,6 +180,7 @@ components:
           type: string
           description: Human-readable status message
           example: "Network traffic analysis has been completed"
+          maxLength: 256
         data:
           type: object
           description: Traffic analysis data
@@ -192,14 +195,18 @@ components:
                     type: string
                     description: Application name
                     example: "whatsapp"
+                    maxLength: 128
                   ipv4Address:
                     type: string
                     description: Application server IP ipv4 address
                     example: "202.112.17.122"
+                    pattern: '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+                    maxLength: 15
                   description:
                     type: string
                     description: Application description
                     example: "A free cross-platform app for messaging, calls, and media sharing."
+                    maxLength: 512
                   accessCount:
                     type: integer
                     description: Total number of accesses to the application
