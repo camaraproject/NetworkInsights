@@ -26,7 +26,7 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
 
   @network_traffic_analysis_getTrafficAnalysis_01_generic_success_scenario
   Scenario: Common validations for any success scenario
-    Given networkId, startTime, endTime, period
+    Given networkId, startDate, endDate, period
     When the request "getTrafficAnalysis" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
