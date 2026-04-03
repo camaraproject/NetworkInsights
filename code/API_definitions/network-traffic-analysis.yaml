@@ -151,15 +151,11 @@ components:
         startDate:
           type: string
           format: date-time
-          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$'
-          maxLength: 30
           description: An instant of time, starting of the TimePeriod. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
           example: "2024-06-01T12:00:00Z"
         endDate:
           type: string
           format: date-time
-          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$'
-          maxLength: 30
           description: An instant of time, ending of the TimePeriod. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
           example: "2024-07-01T12:00:00Z"
       required:
@@ -204,7 +200,7 @@ components:
                     type: string
                     description: Application server IP ipv4 address
                     example: "202.112.17.122"
-                    pattern: '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+                    format: ipv4
                     maxLength: 15
                   description:
                     type: string
