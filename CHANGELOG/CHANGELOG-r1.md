@@ -84,7 +84,7 @@ The API definition(s) are based on
 
 ### Added
 
-This is the initial release, which includes two APIs: network-health-assessment and network-traffic-analysis. The network-health-assessment API allows users to query network health scores, enabling them to intuitively view overall network health status and enhancing visualization capabilities. The network-traffic-analysis API provides time-based queries for individual service requests, including access counts and uplink/downlink traffic. This facilitates the analysis of overall network load conditions and provides analytical support for subsequent resource allocation.
+This is the initial release, which includes two APIs: network-health-assessment and network-traffic-analysis. The network-health-assessment API allows users to query network health scores, enabling them to intuitively view the overall network health status and enhancing visualization capabilities. The network-traffic-analysis API provides time-based queries for individual service requests, including access counts and uplink/downlink traffic. This facilitates the analysis of overall network load conditions and provides analytical support for subsequent resource allocation.
 
 ### Changed
 
