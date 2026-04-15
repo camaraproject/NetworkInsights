@@ -88,15 +88,15 @@ This is the initial release,  the network-health-assessment API allows users to 
 
 ### Changed
 
-* _To be filled during release review_
+* None — first release
 
 ### Fixed
 
-* _To be filled during release review_
+* None — first release
 
 ### Removed
 
-* _To be filled during release review_
+* None — first release
 
 ## network-traffic-analysis 0.1.0-alpha.1
 
@@ -113,15 +113,15 @@ This is the initial release, the network-traffic-analysis API provides time-base
 
 ### Changed
 
-* _To be filled during release review_
+* None — first release
 
 ### Fixed
 
-* _To be filled during release review_
+* None — first release
 
 ### Removed
 
-* _To be filled during release review_
+* None — first release
 
 **Full Changelog**: https://github.com/camaraproject/NetworkInsights/commits/r1.1
 
