@@ -1,4 +1,4 @@
-Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
+Feature: CAMARA Network Health Assessment API, v0.1.0-alpha.1 - Operation getHealthScores
 
     # Input to be provided by the implementation to the tester
     #
