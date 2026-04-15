@@ -1,4 +1,4 @@
-Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
+Feature: CAMARA Network Traffic Analysis API, v0.1.0-alpha.1 - Operation getTrafficAnalysis
 
     # Get the results of network analysis
 
@@ -14,7 +14,7 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
 
   Background: Common getTrafficAnalysis setup
     Given an environment at "apiRoot"
-    And the resource "/network-traffic-analysis/vwip/traffic-analysis"
+    And the resource "/network-traffic-analysis/v0.1alpha1/traffic-analysis"
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
