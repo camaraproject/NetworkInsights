@@ -1,4 +1,4 @@
-Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
+Feature: CAMARA Network Traffic Analysis API, v0.1.0-alpha.1 - Operation getTrafficAnalysis
 
     # Get the results of network analysis
 
