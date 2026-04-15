@@ -1,4 +1,4 @@
-Feature: CAMARA Network Health Assessment API, v0.1.0-alpha.1 - Operation getHealthScores
+Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
 
     # Input to be provided by the implementation to the tester
     #
@@ -9,7 +9,7 @@ Feature: CAMARA Network Health Assessment API, v0.1.0-alpha.1 - Operation getHea
 
   Background: Common getHealthScores setup
     Given an environment at "apiRoot"
-    And the resource "/network-health-assessment/v0.1alpha1/health-scores"
+    And the resource "/network-health-assessment/vwip/health-scores"
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
