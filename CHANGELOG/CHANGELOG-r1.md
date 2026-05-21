@@ -85,7 +85,7 @@ The API definition(s) are based on
 
 ## network-health-assessment 0.1.0-rc.1
 
-**network-health-assessment 0.1.0-rc.1 is ...**
+**network-health-assessment 0.1.0-rc.1 is the first release-candidate version of the Network Insights API**
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.2/code/API_definitions/network-health-assessment.yaml&nocors)
@@ -110,7 +110,7 @@ This is the initial release,  the network-health-assessment API allows users to 
 
 ## network-traffic-analysis 0.1.0-rc.1
 
-**network-traffic-analysis 0.1.0-rc.1 is ...**
+**network-traffic-analysis 0.1.0-rc.1 is the first release-candidate version of the Network Insights API**
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.2/code/API_definitions/network-traffic-analysis.yaml&nocors)
