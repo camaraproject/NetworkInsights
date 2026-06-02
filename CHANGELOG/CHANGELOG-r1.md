@@ -93,7 +93,7 @@ The API definition(s) are based on
 
 ## network-health-assessment 0.1.0
 
-**network-health-assessment 0.1.0 is ...**
+**network-health-assessment 0.1.0 is the first public release version of the Network Insights API**
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.3/code/API_definitions/network-health-assessment.yaml&nocors)
@@ -102,11 +102,11 @@ The API definition(s) are based on
 
 ### Added
 
-* _To be filled during release review_
+This is the initial release,  the network-health-assessment API allows users to query network health scores, enabling them to intuitively view the overall network health status and enhancing visualization capabilities.
 
 ### Changed
 
-* _To be filled during release review_
+Update API definitions for Commonalities r4.3 compliance
 
 ### Fixed
 
@@ -118,7 +118,7 @@ The API definition(s) are based on
 
 ## network-traffic-analysis 0.1.0
 
-**network-traffic-analysis 0.1.0 is ...**
+**network-traffic-analysis 0.1.0 is the first public release version of the Network Insights API**
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.3/code/API_definitions/network-traffic-analysis.yaml&nocors)
@@ -127,11 +127,11 @@ The API definition(s) are based on
 
 ### Added
 
-* _To be filled during release review_
+This is the initial release, the network-traffic-analysis API provides time-based queries for individual service requests, including access counts and uplink/downlink traffic. This facilitates the analysis of overall network load conditions and provides analytical support for subsequent resource allocation.
 
 ### Changed
 
-* _To be filled during release review_
+Update API definitions for Commonalities r4.3 compliance
 
 ### Fixed
 
