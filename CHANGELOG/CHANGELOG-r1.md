@@ -114,7 +114,7 @@ Update API definitions for Commonalities r4.3 compliance
 
 ### Removed
 
-* _To be filled during release review_
+* N/A
 
 ## network-traffic-analysis 0.1.0
 
