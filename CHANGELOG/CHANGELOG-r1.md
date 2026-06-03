@@ -102,7 +102,7 @@ The API definition(s) are based on
 
 ### Added
 
-This is the initial release,  the network-health-assessment API allows users to query network health scores, enabling them to intuitively view the overall network health status and enhancing visualization capabilities.
+This is the initial version of the the network-health-assessment API. It allows API consumers to query network health scores, enabling them to intuitively display the overall network health status and enhancing visualization capabilities.
 
 ### Changed
 
