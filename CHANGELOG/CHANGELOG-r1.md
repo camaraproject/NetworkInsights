@@ -135,7 +135,7 @@ Update API definitions for Commonalities r4.3 compliance
 
 ### Fixed
 
-* _To be filled during release review_
+* N/A
 
 ### Removed
 
