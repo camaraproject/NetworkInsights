@@ -139,7 +139,7 @@ Update API definitions for Commonalities r4.3 compliance
 
 ### Removed
 
-* _To be filled during release review_
+* N/A
 
 **Full Changelog**: https://github.com/camaraproject/NetworkInsights/commits/r1.3
 
