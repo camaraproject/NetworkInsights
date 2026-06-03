@@ -118,7 +118,7 @@ Update API definitions for Commonalities r4.3 compliance
 
 ## network-traffic-analysis 0.1.0
 
-**network-traffic-analysis 0.1.0 is the first public release version of the Network Insights API**
+**network-traffic-analysis 0.1.0 is the first public version of the Network Insights API**
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.3/code/API_definitions/network-traffic-analysis.yaml&nocors)
