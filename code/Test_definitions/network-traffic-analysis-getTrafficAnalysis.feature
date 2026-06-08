@@ -1,4 +1,4 @@
-Feature: CAMARA Network Traffic Analysis API v0.2.0 - Operation getTrafficAnalysis
+Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
 
     # Get the results of network analysis
 
@@ -9,11 +9,11 @@ Feature: CAMARA Network Traffic Analysis API v0.2.0 - Operation getTrafficAnalys
     # * Min start and end dates allowed
     # * Max requested time period allowed
 
-    # References to OAS spec schemas refer to schemas specifies in network-traffic-analysis.yaml, version v0.2.0
+    # References to OAS spec schemas refer to schemas specifies in network-traffic-analysis.yaml, version vwip
 
   Background: Common getTrafficAnalysis setup
     Given an environment at "apiRoot"
-    And the resource "/network-traffic-analysis/v0.2.0/traffic-analysis"
+    And the resource "/network-traffic-analysis/vwip/traffic-analysis"
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
