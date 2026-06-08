@@ -17,8 +17,8 @@ info:
 
     # Request Parameters Definition:
     * **networkId**: Unique identifier of the analyzed network (UUID format).
-    * **startDate**: Start date and time of the analysis period (RFC 3339 with timezone).
-    * **endDate**: End date and time of the analysis period (RFC 3339 with timezone).
+    * **startDate**: Start date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this is the start of the day (00:00:00). For frequency=HOUR, this is the start of the hour (HH:00:00).
+    * **endDate**: End date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this is the start of the next day (00:00:00). For frequency=HOUR, this is the start of the next hour (HH+1:00:00).
     * **frequency**: Analysis granularity (enumeration: 'DAY', 'HOUR').
     * **page**: Requested page number (1-indexed). Defaults to 1.
     * **perPage**: Number of items per page. Defaults to 20, maximum 100.
@@ -266,10 +266,12 @@ components:
                 maximum: 9223372036854775807
                 example: 307200
               startDate:
-                $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+                allOf:
+                  - $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
                 description: Start of the aggregation period for this record (inclusive). For frequency=DAY, this is the start of the day (00:00:00). For frequency=HOUR, this is the start of the hour (HH:00:00).
               endDate:
-                $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+                allOf:
+                  - $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
                 description: End of the aggregation period for this record (exclusive). For frequency=DAY, this is the start of the next day (00:00:00). For frequency=HOUR, this is the start of the next hour (HH+1:00:00).
               accessDate:
                 type: string
