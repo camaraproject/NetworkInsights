@@ -25,6 +25,10 @@ info:
     * **networkId**: Unique identifier of the Assessment network (UUID format).
     * **netType**: Modules within the network. Optional values are: NET (the entire network), NET_WIRELESS (wireless network), NET_TRANSPORT (transport network), NET_CORE (core network).
 
+    # Error handling
+    - `404 NOT_FOUND`: Returned when the specified `networkId` does not exist in the system.
+    - `404 IDENTIFIER_NOT_FOUND`: Returned when the network exists but no health data is available for the requested period (e.g., network not yet operational). If the API provider cannot distinguish these cases, `404 NOT_FOUND` may be used for both.
+
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
     # Authorization and authentication
 
@@ -38,7 +42,7 @@ info:
     <!-- CAMARA:MANDATORY:request-body-strictness:BEGIN -->
     # Request body strictness
 
-    This API rejects requests with JSON request bodies that contain properties not declared in this specification, at any nesting level. Unknown properties result in a 400 INVALID_ARGUMENT response.
+    This API rejects requests with JSON request bodies that contain properties not declared in this specification, at any nesting level. Unknown properties result in a `400 INVALID_ARGUMENT` response.
     <!-- CAMARA:MANDATORY:request-body-strictness:END -->
 
     <!-- CAMARA:MANDATORY:additional-error-responses:BEGIN -->
@@ -51,7 +55,7 @@ info:
     As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
     <!-- CAMARA:MANDATORY:additional-error-responses:END -->
 
-  version: wip
+  version: 0.2.0
   x-camara-commonalities: "0.7"
   license:
     name: Apache 2.0
@@ -60,7 +64,7 @@ externalDocs:
   description: Project documentation at CAMARA
   url: https://github.com/camaraproject/NetworkInsights
 servers:
-  - url: "{apiRoot}/network-health-assessment/vwip"
+  - url: "{apiRoot}/network-health-assessment/v0.2.0"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -70,42 +74,33 @@ tags:
     description: Query Network Health Assessment scores for specific network modules.
 paths:
   /health-scores:
-    post:
+    get:
       tags:
         - Network Health Assessment
       summary: Query the latest network health score
       description: |
         Query the health assessment results of the specified network module at the latest time point.
-        - Returns the health score (0-100) for the selected network module.
+        Returns the health score (0-100) for the selected network module.
       operationId: getHealthScores
       security:
         - openId:
             - network-health-assessment:health-scores:read
       parameters:
         - $ref: "#/components/parameters/x-correlator"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - networkId
-                - netType
-              properties:
-                networkId:
-                  $ref: "#/components/schemas/NetworkId"
-                netType:
-                  $ref: "#/components/schemas/NetTypeEnum"
-            examples:
-              EXAMPLE_NET:
-                value:
-                  networkId: "123e4567-e89b-12d3-a456-426614174000"
-                  netType: "NET"
-              EXAMPLE_NET_WIRELESS:
-                value:
-                  networkId: "123e4567-e89b-12d3-a456-426614174000"
-                  netType: "NET_WIRELESS"
+        - name: networkId
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/NetworkId"
+          description: Unique identifier of the Assessment network (UUID format).
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        - name: netType
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/NetTypeEnum"
+          description: Modules within the network.
+          example: "NET"
       responses:
         "200":
           description: Health score queried successfully
@@ -160,7 +155,7 @@ components:
       example: "123e4567-e89b-12d3-a456-426614174000"
 
     Score:
-      title: HealthScore
+      title: Score
       description: Value of the health score (0-100, higher is better)
       type: number
       format: double
@@ -169,7 +164,7 @@ components:
       example: 94.56
 
     HealthInfo:
-      title: NetworkHealthInfo
+      title: HealthInfo
       description: Network health score information
       allOf:
         - type: object
@@ -181,11 +176,7 @@ components:
             score:
               $ref: "#/components/schemas/Score"
             scoringTime:
-              type: string
-              format: date-time
-              maxLength: 64
-              description: Latest time point of the health score calculation. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
-              example: "2025-12-01T12:00:00Z"
+              $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
           required:
             - networkId
             - netType
@@ -194,7 +185,12 @@ components:
 
     NetTypeEnum:
       title: NetworkModuleType
-      description: Enums of network module types
+      description: |
+        Type of network module to query.
+        - `NET`: The entire network (aggregated health score across all modules)
+        - `NET_WIRELESS`: Wireless/RAN network module
+        - `NET_TRANSPORT`: Transport/backhaul network module
+        - `NET_CORE`: Core network module
       type: string
       enum:
         - NET
