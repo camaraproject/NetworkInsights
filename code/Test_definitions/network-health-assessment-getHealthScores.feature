@@ -1,15 +1,15 @@
-Feature: CAMARA Network Health Assessment API v0.2.0 - Operation getHealthScores
+Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
 
     # Input to be provided by the implementation to the tester
     #
     #
     # Implementation indications:
     #
-    # References to OAS spec schemas refer to schemas specifies in network-health-assessment.yaml, version v0.2.0
+    # References to OAS spec schemas refer to schemas specifies in network-health-assessment.yaml, version vwip
 
   Background: Common getHealthScores setup
     Given an environment at "apiRoot"
-    And the resource "/network-health-assessment/v0.2.0/health-scores"
+    And the resource "/network-health-assessment/vwip/health-scores"
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
@@ -29,7 +29,7 @@ Feature: CAMARA Network Health Assessment API v0.2.0 - Operation getHealthScores
 
   @network_health_assessment_getHealthScores_02_invalid_argument_scenario
   Scenario: Error response for invalid argument in query parameters
-    Given the query parameter argument is invalid, such as illegal character and format error
+    Given a query parameter argument is invalid, such as illegal character or format error
     When the request "getHealthScores" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
@@ -40,7 +40,7 @@ Feature: CAMARA Network Health Assessment API v0.2.0 - Operation getHealthScores
 
   @network_health_assessment_getHealthScores_03_out_of_range_scenario
   Scenario: Error responses where the parameters are out of range
-    Given the query parameter argument is out of range, for example an invalid netType value
+    Given a query parameter argument is out of range, for example an invalid netType value
     When the request "getHealthScores" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
