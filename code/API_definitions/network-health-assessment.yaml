@@ -22,13 +22,8 @@ info:
     - Query the health scores of different network modules in the specified network at the latest point in time.
 
     # Request Parameters Definition
-    - **networkId**: Unique identifier of the Assessment network (UUID format).
-    - **netType**: Modules within the network. Optional values are: NET (the entire network), NET_WIRELESS (wireless network), NET_TRANSPORT (transport network), NET_CORE (core network).
-
-    # Error handling
-    - 404 NOT FOUND: Returned when the specified networkId does not exist in the system.
-
-    Note: When the networkId exists but no health data is available for the requested period, the API returns 200 OK with score: null and scoringTime: null. This is a successful response, not an error.
+    - networkId: Unique identifier of the Assessment network (UUID format).
+    - netType: Modules within the network. Optional values are: NET (the entire network), NET_WIRELESS (wireless network), NET_TRANSPORT (transport network), NET_CORE (core network).
 
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
     # Authorization and authentication
@@ -105,7 +100,7 @@ paths:
           example: "NET"
       responses:
         "200":
-          description: Health score queried successfully. Returns score: null if no data available for the requested period.
+          description: "Health score queried successfully. Returns score: null if no data available for the requested period."
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
@@ -174,7 +169,7 @@ components:
 
     HealthInfo:
       title: HealthInfo
-      description: Network health score information. If no data is available for the requested period, score and scoringTime will be null.
+      description: Network health score information
       type: object
       properties:
         networkId:
@@ -185,12 +180,10 @@ components:
           allOf:
             - $ref: "#/components/schemas/Score"
           nullable: true
-          description: Value of the health score (0-100, higher is better). Null if no data available.
         scoringTime:
           allOf:
             - $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
           nullable: true
-          description: Time point of the health score calculation. Null if no data available.
       required:
         - networkId
         - netType
