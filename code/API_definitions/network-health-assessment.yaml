@@ -21,14 +21,14 @@ info:
     The API provides the following functionality:
     - Query the health scores of different network modules in the specified network at the latest point in time.
 
-    # Request Parameters Definition:
-    * **networkId**: Unique identifier of the Assessment network (UUID format).
-    * **netType**: Modules within the network. Optional values are: NET (the entire network), NET_WIRELESS (wireless network), NET_TRANSPORT (transport network), NET_CORE (core network).
+    # Request Parameters Definition
+    - **networkId**: Unique identifier of the Assessment network (UUID format).
+    - **netType**: Modules within the network. Optional values are: NET (the entire network), NET_WIRELESS (wireless network), NET_TRANSPORT (transport network), NET_CORE (core network).
 
     # Error handling
-    - `404 NOT FOUND`: Returned when the specified `networkId` does not exist in the system.
+    - 404 NOT FOUND: Returned when the specified networkId does not exist in the system.
 
-    Note: When the `networkId` exists but no health data is available for the requested period, the API returns `200 OK` with `score: null` and `scoringTime: null`. This is a successful response, not an error.
+    Note: When the networkId exists but no health data is available for the requested period, the API returns 200 OK with score: null and scoringTime: null. This is a successful response, not an error.
 
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
     # Authorization and authentication
@@ -82,7 +82,7 @@ paths:
       description: |
         Query the health assessment results of the specified network module at the latest time point.
         Returns the health score (0-100) for the selected network module.
-        If no data is available for the requested period, returns `200 OK` with `score: null` and `scoringTime: null`.
+        If no data is available for the requested period, returns 200 OK with score: null and scoringTime: null.
       operationId: getHealthScores
       security:
         - openId:
@@ -105,7 +105,7 @@ paths:
           example: "NET"
       responses:
         "200":
-          description: Health score queried successfully. Returns `score: null` if no data available for the requested period.
+          description: Health score queried successfully. Returns score: null if no data available for the requested period.
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
@@ -174,7 +174,7 @@ components:
 
     HealthInfo:
       title: HealthInfo
-      description: Network health score information. If no data is available for the requested period, `score` and `scoringTime` will be null.
+      description: Network health score information. If no data is available for the requested period, score and scoringTime will be null.
       type: object
       properties:
         networkId:
@@ -201,10 +201,10 @@ components:
       title: NetworkModuleType
       description: |
         Type of network module to query.
-        - `NET`: The entire network (aggregated health score across all modules)
-        - `NET_WIRELESS`: Wireless/RAN network module
-        - `NET_TRANSPORT`: Transport/backhaul network module
-        - `NET_CORE`: Core network module
+        - NET: The entire network (aggregated health score across all modules)
+        - NET_WIRELESS: Wireless/RAN network module
+        - NET_TRANSPORT: Transport/backhaul network module
+        - NET_CORE: Core network module
       type: string
       enum:
         - NET
