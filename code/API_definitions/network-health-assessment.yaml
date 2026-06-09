@@ -26,8 +26,9 @@ info:
     * **netType**: Modules within the network. Optional values are: NET (the entire network), NET_WIRELESS (wireless network), NET_TRANSPORT (transport network), NET_CORE (core network).
 
     # Error handling
-    - `404 NOT_FOUND`: Returned when the specified `networkId` does not exist in the system.
-    - `404 IDENTIFIER_NOT_FOUND`: Returned when the network exists but no health data is available for the requested period (e.g., network not yet operational). If the API provider cannot distinguish these cases, `404 NOT_FOUND` may be used for both.
+    - `404 NOT FOUND`: Returned when the specified `networkId` does not exist in the system.
+
+    Note: When the `networkId` exists but no health data is available for the requested period, the API returns `200 OK` with `score: null` and `scoringTime: null`. This is a successful response, not an error.
 
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
     # Authorization and authentication
@@ -81,6 +82,7 @@ paths:
       description: |
         Query the health assessment results of the specified network module at the latest time point.
         Returns the health score (0-100) for the selected network module.
+        If no data is available for the requested period, returns `200 OK` with `score: null` and `scoringTime: null`.
       operationId: getHealthScores
       security:
         - openId:
@@ -103,7 +105,7 @@ paths:
           example: "NET"
       responses:
         "200":
-          description: Health score queried successfully
+          description: Health score queried successfully. Returns `score: null` if no data available for the requested period.
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
@@ -116,6 +118,13 @@ paths:
                   $ref: "#/components/examples/RESPONSE_EXAMPLE_NET"
                 RESPONSE_NET_WIRELESS:
                   $ref: "#/components/examples/RESPONSE_EXAMPLE_NET_WIRELESS"
+                RESPONSE_NO_DATA:
+                  description: Example response when no health data is available
+                  value:
+                    networkId: "123e4567-e89b-12d3-a456-426614174000"
+                    netType: "NET"
+                    score: null
+                    scoringTime: null
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -165,23 +174,28 @@ components:
 
     HealthInfo:
       title: HealthInfo
-      description: Network health score information
-      allOf:
-        - type: object
-          properties:
-            networkId:
-              $ref: "#/components/schemas/NetworkId"
-            netType:
-              $ref: "#/components/schemas/NetTypeEnum"
-            score:
-              $ref: "#/components/schemas/Score"
-            scoringTime:
-              $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
-          required:
-            - networkId
-            - netType
-            - score
-            - scoringTime
+      description: Network health score information. If no data is available for the requested period, `score` and `scoringTime` will be null.
+      type: object
+      properties:
+        networkId:
+          $ref: "#/components/schemas/NetworkId"
+        netType:
+          $ref: "#/components/schemas/NetTypeEnum"
+        score:
+          allOf:
+            - $ref: "#/components/schemas/Score"
+          nullable: true
+          description: Value of the health score (0-100, higher is better). Null if no data available.
+        scoringTime:
+          allOf:
+            - $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+          nullable: true
+          description: Time point of the health score calculation. Null if no data available.
+      required:
+        - networkId
+        - netType
+        - score
+        - scoringTime
 
     NetTypeEnum:
       title: NetworkModuleType
