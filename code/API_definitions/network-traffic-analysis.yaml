@@ -44,8 +44,9 @@ info:
     three-legged tokens with appropriate scopes and consent pages must be implemented by the provider.
 
     # Error handling
-    - `404 NOT_FOUND`: Returned when the specified `networkId` does not exist in the system.
-    - `404 IDENTIFIER_NOT_FOUND`: Returned when the network exists but no traffic data is available for the requested time period (e.g., network not yet operational, or no traffic during the period). If the API provider cannot distinguish these cases, `404 NOT_FOUND` may be used for both.
+    - `404 NOT FOUND`: Returned when the specified `networkId` does not exist in the system.
+
+    Note: When the `networkId` exists but no traffic data is available for the requested period, the API returns `200 OK` with an empty `records` array. This is a successful response, not an error.
 
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
     # Authorization and authentication
@@ -98,6 +99,7 @@ paths:
       summary: Get network traffic analysis
       description: |
         Query 5G traffic statistics information for aggregated network-level data.
+        If no data is available for the requested period, returns `200 OK` with an empty `records` array.
       operationId: getTrafficAnalysis
       security:
         - openId:
@@ -146,7 +148,7 @@ paths:
           description: Number of items per page. Defaults to 20, maximum 100.
       responses:
         "200":
-          description: Successful response with network traffic analysis data
+          description: Successful response with network traffic analysis data. Returns empty `records` array if no data available.
           headers:
             x-correlator:
               $ref: '#/components/headers/x-correlator'
@@ -157,6 +159,15 @@ paths:
               examples:
                 Success:
                   $ref: '#/components/examples/TrafficAnalysisSuccess'
+                EmptyResponse:
+                  description: Example response when no traffic data is available
+                  value:
+                    records: []
+                    pagination:
+                      page: 1
+                      perPage: 20
+                      totalCount: 0
+                      totalPages: 0
         '400':
           $ref: '#/components/responses/Generic400'
         '401':
@@ -203,14 +214,14 @@ components:
 
     TrafficAnalysisResponse:
       type: object
-      description: Response schema for traffic analysis
+      description: Response schema for traffic analysis. Returns empty `records` array if no data available.
       required:
         - records
         - pagination
       properties:
         records:
           type: array
-          description: Array of traffic records for the current page
+          description: Array of traffic records for the current page. Empty array if no data available.
           minItems: 0
           maxItems: 100
           items:
