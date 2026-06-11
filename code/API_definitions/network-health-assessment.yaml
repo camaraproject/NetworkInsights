@@ -50,17 +50,13 @@ info:
 
     As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
     <!-- CAMARA:MANDATORY:additional-error-responses:END -->
-
-  version: wip
-  x-camara-commonalities: "0.7"
+  version: 0.1.0
+  x-camara-commonalities: 0.8.0
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-externalDocs:
-  description: Project documentation at CAMARA
-  url: https://github.com/camaraproject/NetworkInsights
 servers:
-  - url: "{apiRoot}/network-health-assessment/vwip"
+  - url: '{apiRoot}/network-health-assessment/v0.1'
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -68,6 +64,9 @@ servers:
 tags:
   - name: Network Health Assessment
     description: Query Network Health Assessment scores for specific network modules.
+externalDocs:
+  description: Project documentation at CAMARA
+  url: https://github.com/camaraproject/NetworkInsights
 paths:
   /health-scores:
     get:
@@ -82,74 +81,69 @@ paths:
         - openId:
             - network-health-assessment:health-scores:read
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
         - name: networkId
           in: query
           required: true
           schema:
-            $ref: "#/components/schemas/NetworkId"
+            $ref: '#/components/schemas/NetworkId'
           description: Unique identifier of the Assessment network (UUID format).
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          example: 123e4567-e89b-12d3-a456-426614174000
         - name: netType
           in: query
           required: true
           schema:
-            $ref: "#/components/schemas/NetTypeEnum"
+            $ref: '#/components/schemas/NetTypeEnum'
           description: Modules within the network.
-          example: "NET"
+          example: NET
       responses:
-        "200":
+        '200':
           description: Health score queried successfully
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HealthInfo"
+                $ref: '#/components/schemas/HealthInfo'
               examples:
                 RESPONSE_NET:
-                  $ref: "#/components/examples/RESPONSE_EXAMPLE_NET"
+                  $ref: '#/components/examples/RESPONSE_EXAMPLE_NET'
                 RESPONSE_NET_WIRELESS:
-                  $ref: "#/components/examples/RESPONSE_EXAMPLE_NET_WIRELESS"
-        "400":
-          $ref: "#/components/responses/Generic400"
-        "401":
-          $ref: "#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/Generic403"
-        "404":
-          $ref: "#/components/responses/Generic404"
-
+                  $ref: '#/components/examples/RESPONSE_EXAMPLE_NET_WIRELESS'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '404':
+          $ref: '#/components/responses/Generic404'
 components:
   securitySchemes:
     openId:
       description: OpenID Connect authentication
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
-
   parameters:
     x-correlator:
       name: x-correlator
       in: header
       description: Correlation id for the different services
       schema:
-        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
-
+        $ref: '#/components/schemas/XCorrelator'
   headers:
     x-correlator:
       description: Correlation id for the different services
       schema:
-        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
-
+        $ref: '#/components/schemas/XCorrelator'
   schemas:
     NetworkId:
       description: Network ID in UUID format (unique identifier of the analyzed network)
       type: string
       format: uuid
       maxLength: 36
-      example: "123e4567-e89b-12d3-a456-426614174000"
-
+      example: 123e4567-e89b-12d3-a456-426614174000
     Score:
       title: HealthScore
       description: Value of the health score (0-100, higher is better)
@@ -158,7 +152,6 @@ components:
       minimum: 0
       maximum: 100
       example: 94.56
-
     HealthInfo:
       title: NetworkHealthInfo
       description: Network health score information
@@ -166,23 +159,22 @@ components:
         - type: object
           properties:
             networkId:
-              $ref: "#/components/schemas/NetworkId"
+              $ref: '#/components/schemas/NetworkId'
             netType:
-              $ref: "#/components/schemas/NetTypeEnum"
+              $ref: '#/components/schemas/NetTypeEnum'
             score:
-              $ref: "#/components/schemas/Score"
+              $ref: '#/components/schemas/Score'
             scoringTime:
               type: string
               format: date-time
               maxLength: 64
               description: Latest time point of the health score calculation. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
-              example: "2025-12-01T12:00:00Z"
+              example: '2025-12-01T12:00:00Z'
           required:
             - networkId
             - netType
             - score
             - scoringTime
-
     NetTypeEnum:
       title: NetworkModuleType
       description: Enums of network module types
@@ -192,18 +184,45 @@ components:
         - NET_WIRELESS
         - NET_TRANSPORT
         - NET_CORE
-      example: "NET"
-
+      example: NET
+    XCorrelator:
+      type: string
+      description: Correlator string, UUID format recommended but any string matching the pattern can be used
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      maxLength: 256
+      example: b4333c46-49c0-4f62-80d7-f0ef930f1c46
+    ErrorInfo:
+      type: object
+      description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
+          description: HTTP response status code
+        code:
+          type: string
+          maxLength: 96
+          description: A human-readable code to describe the error
+        message:
+          type: string
+          maxLength: 512
+          description: A human-readable description of what the event represents
   responses:
     Generic400:
       description: Bad Request
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+            $ref: '#/components/schemas/ErrorInfo'
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               description: Invalid Argument. Generic Syntax Exception
@@ -221,11 +240,11 @@ components:
       description: Unauthorized
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+            $ref: '#/components/schemas/ErrorInfo'
           examples:
             GENERIC_401_UNAUTHENTICATED:
               description: Request cannot be authenticated and a new authentication is required
@@ -237,11 +256,11 @@ components:
       description: Forbidden
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+            $ref: '#/components/schemas/ErrorInfo'
           examples:
             GENERIC_403_PERMISSION_DENIED:
               description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
@@ -253,11 +272,11 @@ components:
       description: Not found
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+            $ref: '#/components/schemas/ErrorInfo'
           examples:
             GENERIC_404_NOT_FOUND:
               description: Resource is not found
@@ -265,19 +284,18 @@ components:
                 status: 404
                 code: NOT_FOUND
                 message: The specified resource is not found.
-
   examples:
     RESPONSE_EXAMPLE_NET:
       description: Example response for health score of the entire network (NET type)
       value:
-        networkId: "123e4567-e89b-12d3-a456-426614174000"
-        netType: "NET"
+        networkId: 123e4567-e89b-12d3-a456-426614174000
+        netType: NET
         score: 94.56
-        scoringTime: "2025-12-01T12:00:00Z"
+        scoringTime: '2025-12-01T12:00:00Z'
     RESPONSE_EXAMPLE_NET_WIRELESS:
       description: Example response for health score of the wireless network module (NET_WIRELESS type)
       value:
-        networkId: "123e4567-e89b-12d3-a456-426614174000"
-        netType: "NET_WIRELESS"
+        networkId: 123e4567-e89b-12d3-a456-426614174000
+        netType: NET_WIRELESS
         score: 90.12
-        scoringTime: "2025-12-01T12:00:00Z"
+        scoringTime: '2025-12-01T12:00:00Z'
