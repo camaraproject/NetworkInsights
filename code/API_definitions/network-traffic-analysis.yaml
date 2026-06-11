@@ -17,8 +17,36 @@ info:
 
     # Request Parameters Definition:
     * **networkId**: Unique identifier of the analyzed network (UUID format).
-    * **timePeriod**: Time range for network analysis (start + end time, RFC 3339 with timezone).
+    * **startDate**: Start date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this is the start of the day (00:00:00). For frequency=HOUR, this is the start of the hour (HH:00:00).
+    * **endDate**: End date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this is the start of the next day (00:00:00). For frequency=HOUR, this is the start of the next hour (HH+1:00:00).
     * **frequency**: Analysis granularity (enumeration: 'DAY', 'HOUR').
+    * **page**: Requested page number (1-indexed). Defaults to 1.
+    * **perPage**: Number of items per page. Defaults to 20, maximum 100.
+
+    # Application identification
+
+    The `app` field in the response identifies the application detected via DPI.
+    Application names are normalized by the platform (e.g., "whatsapp", "wechat", "netflix")
+    and serve as stable identifiers for client-side filtering and correlation.
+    API providers should document the list of possible application names and
+    any normalization rules applied. Clients should not depend on case sensitivity
+    or special character formatting; values are provided in lowercase with no
+    special characters.
+
+    # Privacy and Data Granularity
+
+    This API provides per-application traffic breakdown obtained via DPI (Deep Packet Inspection).
+    All data is aggregated at network level and does not contain individual device or user identifiers.
+    API providers must ensure that per-application data cannot be re-identified to specific users or devices.
+
+    The use of two-legged access tokens is recommended for this API, as no end-user personal data
+    is processed. If local regulations require user consent for DPI-based application detection,
+    three-legged tokens with appropriate scopes and consent pages must be implemented by the provider.
+
+    # Error handling
+    - `404 NOT FOUND`: Returned when the specified `networkId` does not exist in the system.
+
+    Note: When the `networkId` exists but no traffic data is available for the requested period, the API returns `200 OK` with an empty `records` array. This is a successful response, not an error.
 
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
     # Authorization and authentication
@@ -65,46 +93,62 @@ tags:
     description: The API allows API consumers to query 5G traffic statistics information for aggregated network-level data.
 paths:
   /traffic-analysis:
-    post:
+    get:
       tags:
         - Network Traffic Analysis
       summary: Get network traffic analysis
       description: |
         Query 5G traffic statistics information for aggregated network-level data.
+        If no data is available for the requested period, returns `200 OK` with an empty `records` array.
       operationId: getTrafficAnalysis
       security:
         - openId:
             - network-traffic-analysis:traffic-analysis:read
       parameters:
         - $ref: "#/components/parameters/x-correlator"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - networkId
-                - timePeriod
-                - frequency
-              properties:
-                networkId:
-                  $ref: "#/components/schemas/NetworkId"
-                timePeriod:
-                  $ref: "#/components/schemas/TimePeriod"
-                frequency:
-                  $ref: "#/components/schemas/Frequency"
-            examples:
-              ValidRequest:
-                value:
-                  networkId: "123e4567-e89b-12d3-a456-426614174000"
-                  timePeriod:
-                    startDate: "2024-06-01T12:00:00Z"
-                    endDate: "2024-07-01T12:00:00Z"
-                  frequency: "DAY"
+        - name: networkId
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/NetworkId"
+          description: Unique identifier of the analyzed network (UUID format).
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+          description: Start date and time of the analysis period (RFC 3339 with timezone).
+          example: "2024-06-01T12:00:00Z"
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+          description: End date and time of the analysis period (RFC 3339 with timezone).
+          example: "2024-07-01T12:00:00Z"
+        - name: frequency
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/Frequency"
+          description: Analysis granularity (time interval for aggregation).
+          example: "DAY"
+        - name: page
+          in: query
+          required: false
+          schema:
+            $ref: "../common/CAMARA_common.yaml#/components/schemas/Page"
+          description: Requested page number (1-indexed). Defaults to 1.
+        - name: perPage
+          in: query
+          required: false
+          schema:
+            $ref: "../common/CAMARA_common.yaml#/components/schemas/PerPage"
+          description: Number of items per page. Defaults to 20, maximum 100.
       responses:
         "200":
-          description: Successful response with network traffic analysis data
+          description: Successful response with network traffic analysis data. Returns empty `records` array if no data available.
           headers:
             x-correlator:
               $ref: '#/components/headers/x-correlator'
@@ -115,6 +159,15 @@ paths:
               examples:
                 Success:
                   $ref: '#/components/examples/TrafficAnalysisSuccess'
+                EmptyResponse:
+                  description: Example response when no traffic data is available
+                  value:
+                    records: []
+                    pagination:
+                      page: 1
+                      perPage: 20
+                      totalCount: 0
+                      totalPages: 0
         '400':
           $ref: '#/components/responses/Generic400'
         '401':
@@ -153,9 +206,6 @@ components:
       maxLength: 36
       example: "123e4567-e89b-12d3-a456-426614174000"
 
-    TimePeriod:
-      $ref: "../common/CAMARA_common.yaml#/components/schemas/TimePeriod"
-
     Frequency:
       description: Analysis granularity (time interval for aggregation)
       type: string
@@ -164,91 +214,85 @@ components:
 
     TrafficAnalysisResponse:
       type: object
-      description: Response schema for traffic analysis
+      description: Response schema for traffic analysis. Returns empty `records` array if no data available.
       required:
-        - message
-        - data
+        - records
+        - pagination
       properties:
-        message:
-          type: string
-          description: Human-readable status message
-          example: "Network traffic analysis has been completed"
-          maxLength: 256
-        data:
-          type: object
-          description: Traffic analysis data
-          properties:
-            records:
-              type: array
-              description: Array of traffic records per application
-              minItems: 1
-              maxItems: 1000
-              items:
-                type: object
-                description: Traffic record for a single application
-                properties:
-                  app:
-                    type: string
-                    description: Application name
-                    example: "whatsapp"
-                    maxLength: 128
-                  ipv4Address:
-                    type: string
-                    description: Application server IP ipv4 address
-                    example: "202.112.17.122"
-                    format: ipv4
-                    maxLength: 15
-                  description:
-                    type: string
-                    description: Application description
-                    example: "A free cross-platform app for messaging, calls, and media sharing."
-                    maxLength: 512
-                  accessCount:
-                    type: integer
-                    description: Total number of accesses to the application
-                    format: int64
-                    minimum: 0
-                    maximum: 9223372036854775807
-                    example: 150
-                  accessUpFlow:
-                    type: integer
-                    description: Total upstream traffic (bytes)
-                    format: int64
-                    minimum: 0
-                    maximum: 9223372036854775807
-                    example: 102400
-                  accessDownFlow:
-                    type: integer
-                    description: Total downstream traffic (bytes)
-                    format: int64
-                    minimum: 0
-                    maximum: 9223372036854775807
-                    example: 204800
-                  accessFlow:
-                    type: integer
-                    description: Total traffic (up + down, bytes)
-                    format: int64
-                    minimum: 0
-                    maximum: 9223372036854775807
-                    example: 307200
-                  startDate:
-                    $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
-                  endDate:
-                    $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
-                  accessDate:
-                    type: string
-                    format: date
-                    description: Date of the traffic record (YYYY-MM-DD)
-                    example: "2024-06-07"
-                    pattern: '^\d{4}-\d{2}-\d{2}$'
-                    maxLength: 10
-            total:
-              type: integer
-              description: Total number of application records
-              format: int64
-              minimum: 0
-              maximum: 9223372036854775807
-              example: 22
+        records:
+          type: array
+          description: Array of traffic records for the current page. Empty array if no data available.
+          minItems: 0
+          maxItems: 100
+          items:
+            type: object
+            description: Traffic record for a single application
+            properties:
+              app:
+                type: string
+                description: |
+                  Application identifier as recognized by the DPI system.
+                  Names are normalized (lowercase, no special characters) for consistency.
+                  The set of possible values is provider-specific but should be documented and stable.
+                  API consumers can use this field directly for filtering or correlation.
+                example: "whatsapp"
+                maxLength: 128
+              ipv4Address:
+                type: string
+                description: Application server IPv4 address
+                example: "202.112.17.122"
+                format: ipv4
+                maxLength: 15
+              description:
+                type: string
+                description: Application description
+                example: "A free cross-platform app for messaging, calls, and media sharing."
+                maxLength: 512
+              accessCount:
+                type: integer
+                description: Total number of accesses to the application
+                format: int64
+                minimum: 0
+                maximum: 9223372036854775807
+                example: 150
+              accessUpFlow:
+                type: integer
+                description: Total upstream traffic (bytes)
+                format: int64
+                minimum: 0
+                maximum: 9223372036854775807
+                example: 102400
+              accessDownFlow:
+                type: integer
+                description: Total downstream traffic (bytes)
+                format: int64
+                minimum: 0
+                maximum: 9223372036854775807
+                example: 204800
+              accessFlow:
+                type: integer
+                description: Total traffic (up + down, bytes)
+                format: int64
+                minimum: 0
+                maximum: 9223372036854775807
+                example: 307200
+              startDate:
+                allOf:
+                  - $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+                description: Start of the aggregation period for this record (inclusive). For frequency=DAY, this is the start of the day (00:00:00). For frequency=HOUR, this is the start of the hour (HH:00:00).
+              endDate:
+                allOf:
+                  - $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+                description: End of the aggregation period for this record (exclusive). For frequency=DAY, this is the start of the next day (00:00:00). For frequency=HOUR, this is the start of the next hour (HH+1:00:00).
+              accessDate:
+                type: string
+                format: date
+                description: The calendar date of the record (YYYY-MM-DD). For frequency=HOUR, this is the date of the hour; multiple records with the same accessDate may exist for different hours.
+                example: "2024-06-07"
+                pattern: '^\d{4}-\d{2}-\d{2}$'
+                maxLength: 10
+        pagination:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
 
   responses:
     Generic400:
@@ -326,17 +370,19 @@ components:
     TrafficAnalysisSuccess:
       description: Successful traffic analysis response example
       value:
-        message: "Network traffic analysis has been completed"
-        data:
-          records:
-            - app: "whatsapp"
-              ipv4Address: "202.112.17.122"
-              description: "A free cross-platform app for messaging, calls, and media sharing."
-              accessCount: 150
-              accessUpFlow: 102400
-              accessDownFlow: 204800
-              accessFlow: 307200
-              startDate: "2024-06-07T00:00:00Z"
-              endDate: "2024-06-07T23:59:59Z"
-              accessDate: "2024-06-07"
-          total: 22
+        records:
+          - app: "whatsapp"
+            ipv4Address: "202.112.17.122"
+            description: "A free cross-platform app for messaging, calls, and media sharing."
+            accessCount: 150
+            accessUpFlow: 102400
+            accessDownFlow: 204800
+            accessFlow: 307200
+            startDate: "2024-06-07T00:00:00Z"
+            endDate: "2024-06-07T23:59:59Z"
+            accessDate: "2024-06-07"
+        pagination:
+          page: 1
+          perPage: 20
+          totalCount: 22
+          totalPages: 2

@@ -13,14 +13,14 @@ Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
-    And the "networkId" parameter is set by default to a valid network id
-    And the "netType" parameter specifies the network type. It must be a string and must have one of the following values: NET, NET_WIRELESS, NET_TRANSPORT, or NET_CORE
+    And the query parameter "networkId" is set by default to a valid network id
+    And the query parameter "netType" is set to a valid network type (NET, NET_WIRELESS, NET_TRANSPORT, or NET_CORE)
 
 # Success scenarios
 
   @network_health_assessment_getHealthScores_01_generic_success_scenario
   Scenario: Common validations for any success scenario
-    Given a valid networkId and netType
+    Given valid query parameters "networkId" and "netType"
     When the request "getHealthScores" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -28,8 +28,8 @@ Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
     And the response body complies with the OAS schema at "/components/schemas/HealthInfo"
 
   @network_health_assessment_getHealthScores_02_invalid_argument_scenario
-  Scenario: Error response for invalid argument in request body
-    Given the request body property argument is invalid, such as illegal character and format error
+  Scenario: Error response for invalid argument in query parameters
+    Given a query parameter argument is invalid, such as illegal character or format error
     When the request "getHealthScores" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
@@ -39,8 +39,8 @@ Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
     And the response property "$.message" is "Client specified an invalid argument, request body or query param."
 
   @network_health_assessment_getHealthScores_03_out_of_range_scenario
-  Scenario: Error responses where the parameters in the request body are out of range
-    Given the request body property argument are out of range, for example the end time before start time
+  Scenario: Error responses where the parameters are out of range
+    Given a query parameter argument is out of range, for example an invalid netType value
     When the request "getHealthScores" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
@@ -52,7 +52,7 @@ Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
   @network_health_assessment_getHealthScores_04_missing_authorization_scenario
   Scenario: Error response for no header "Authorization"
     Given the header "Authorization" is not sent
-    And the request body is set to a valid request body
+    And the query parameters are set to valid values
     When the request "getHealthScores" is sent
     Then the response status code is 401
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -74,7 +74,7 @@ Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
 
   @network_health_assessment_getHealthScores_06_not_found_scenario
   Scenario: Not found
-    Given parameters in the correct format, but the network id cannot be found
+    Given query parameters in the correct format, but the network id cannot be found
     When the request "getHealthScores" is sent
     Then the response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"

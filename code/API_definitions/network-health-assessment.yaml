@@ -70,42 +70,33 @@ tags:
     description: Query Network Health Assessment scores for specific network modules.
 paths:
   /health-scores:
-    post:
+    get:
       tags:
         - Network Health Assessment
       summary: Query the latest network health score
       description: |
         Query the health assessment results of the specified network module at the latest time point.
-        - Returns the health score (0-100) for the selected network module.
+        Returns the health score (0-100) for the selected network module.
       operationId: getHealthScores
       security:
         - openId:
             - network-health-assessment:health-scores:read
       parameters:
         - $ref: "#/components/parameters/x-correlator"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - networkId
-                - netType
-              properties:
-                networkId:
-                  $ref: "#/components/schemas/NetworkId"
-                netType:
-                  $ref: "#/components/schemas/NetTypeEnum"
-            examples:
-              EXAMPLE_NET:
-                value:
-                  networkId: "123e4567-e89b-12d3-a456-426614174000"
-                  netType: "NET"
-              EXAMPLE_NET_WIRELESS:
-                value:
-                  networkId: "123e4567-e89b-12d3-a456-426614174000"
-                  netType: "NET_WIRELESS"
+        - name: networkId
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/NetworkId"
+          description: Unique identifier of the Assessment network (UUID format).
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        - name: netType
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/NetTypeEnum"
+          description: Modules within the network.
+          example: "NET"
       responses:
         "200":
           description: Health score queried successfully

@@ -4,9 +4,8 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
 
     # Input to be provided by the implementation to the tester
 
-	# Implementation indications:
-	# * apiRoot: API root of the server URL
-
+    # Implementation indications:
+    # * apiRoot: API root of the server URL
     # * Min start and end dates allowed
     # * Max requested time period allowed
 
@@ -18,15 +17,16 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
-    And the "networkId" parameter is set by default to a valid network id
-    And the "timePeriod" parameter is set as the time period over which the API consumer wants the traffic analysis to be done, including the start time and the end time.
-    And the "frequency" parameter is set to a valid value: DAY or HOUR.
+    And the query parameter "networkId" is set by default to a valid network id
+    And the query parameter "startDate" is set to a valid start date and time (RFC 3339 with timezone)
+    And the query parameter "endDate" is set to a valid end date and time (RFC 3339 with timezone)
+    And the query parameter "frequency" is set to a valid value: DAY or HOUR
 
 # Success scenarios
 
   @network_traffic_analysis_getTrafficAnalysis_01_generic_success_scenario
   Scenario: Common validations for any success scenario
-    Given networkId, startDate, endDate, period
+    Given valid query parameters: networkId, startDate, endDate, frequency
     When the request "getTrafficAnalysis" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -34,8 +34,8 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
 
   @network_traffic_analysis_getTrafficAnalysis_02_invalid_argument_scenario
-  Scenario: Error response for invalid argument in request body
-    Given the request body property argument is invalid, such as illegal character and format error
+  Scenario: Error response for invalid argument in query parameters
+    Given a query parameter argument is invalid, such as illegal character or format error
     When the request "getTrafficAnalysis" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
@@ -45,8 +45,8 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     And the response property "$.message" is "Client specified an invalid argument, request body or query param."
 
   @network_traffic_analysis_getTrafficAnalysis_03_out_of_range_scenario
-  Scenario: Error responses where the parameters in the request body are out of range
-    Given the request body property argument are out of range, for example the end time before start time
+  Scenario: Error responses where the parameters are out of range
+    Given a query parameter argument is out of range, for example the end date before start date
     When the request "getTrafficAnalysis" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
@@ -58,7 +58,7 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
   @network_traffic_analysis_getTrafficAnalysis_04_missing_authorization_scenario
   Scenario: Error response for no header "Authorization"
     Given the header "Authorization" is not sent
-    And the request body is set to a valid request body
+    And the query parameters are set to valid values
     When the request "getTrafficAnalysis" is sent
     Then the response status code is 401
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -80,7 +80,7 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
 
   @network_traffic_analysis_getTrafficAnalysis_06_not_found_scenario
   Scenario: Not found
-    Given parameters in the correct format, but the network id cannot be found
+    Given query parameters in the correct format, but the network id cannot be found
     When the request "getTrafficAnalysis" is sent
     Then the response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"
