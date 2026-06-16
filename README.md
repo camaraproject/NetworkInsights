@@ -49,7 +49,7 @@ _The above section is automatically synchronized by CAMARA project-administratio
 
   * Schedule: !! tbd
   * [Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meetings/telcoapi) !! Update this link with your meeting registration/join link and delete the task
-  * Minutes: Access [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/fQCoBg) !! update this link to your minutes archive page using the "Share" link and delete the task
+  * Minutes: Access [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/fQCoBg)
 
 * Mailing List
   <!-- Note: the `mailinglistname` is either already existing (for API Repositories within a Sub Projects) or will be created by the CAMARA Admin Team. -->
