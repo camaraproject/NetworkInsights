@@ -25,6 +25,15 @@ info:
     * **networkId**: Unique identifier of the Assessment network (UUID format).
     * **netType**: Modules within the network. Optional values are: NET (the entire network), NET_WIRELESS (wireless network), NET_TRANSPORT (transport network), NET_CORE (core network).
 
+    # Privacy and Data Granularity
+
+    This API provides health assessment data at the network and network-module level.
+    All data exposed by this API is aggregated and does not contain individual device, user, or terminal identifiers.
+
+    **Authentication:** This API uses two-legged access tokens (Client Credentials grant type)
+    for service-to-service authentication. No end-user personal data is processed by this API,
+    therefore no user consent or three-legged tokens are required.
+
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
     # Authorization and authentication
 
@@ -77,6 +86,7 @@ paths:
       description: |
         Query the health assessment results of the specified network module at the latest time point.
         Returns the health score (0-100) for the selected network module.
+        If the specified `networkId` exists but no health data is available, returns `200 OK` with `score: null` and `scoringTime: null`.
       operationId: getHealthScores
       security:
         - openId:
@@ -99,7 +109,7 @@ paths:
           example: "NET"
       responses:
         "200":
-          description: Health score queried successfully
+          description: Health score queried successfully. Returns `score: null` and `scoringTime: null` if no data is available for the specified network/module.
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
@@ -112,6 +122,8 @@ paths:
                   $ref: "#/components/examples/RESPONSE_EXAMPLE_NET"
                 RESPONSE_NET_WIRELESS:
                   $ref: "#/components/examples/RESPONSE_EXAMPLE_NET_WIRELESS"
+                RESPONSE_NO_DATA:
+                  $ref: "#/components/examples/RESPONSE_EXAMPLE_NO_DATA"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -152,16 +164,17 @@ components:
 
     Score:
       title: HealthScore
-      description: Value of the health score (0-100, higher is better)
+      description: Value of the health score (0-100, higher is better). Returns `null` if no health data is available for the specified network/module.
       type: number
       format: double
       minimum: 0
       maximum: 100
+      nullable: true
       example: 94.56
 
     HealthInfo:
       title: NetworkHealthInfo
-      description: Network health score information
+      description: Network health score information. When no data is available, `score` and `scoringTime` are `null`.
       allOf:
         - type: object
           properties:
@@ -174,8 +187,9 @@ components:
             scoringTime:
               type: string
               format: date-time
+              nullable: true
               maxLength: 64
-              description: Latest time point of the health score calculation. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+              description: Latest time point of the health score calculation. Returns `null` if no health data is available. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
               example: "2025-12-01T12:00:00Z"
           required:
             - networkId
@@ -281,3 +295,10 @@ components:
         netType: "NET_WIRELESS"
         score: 90.12
         scoringTime: "2025-12-01T12:00:00Z"
+    RESPONSE_EXAMPLE_NO_DATA:
+      description: Example response when no health data is available for the specified network/module
+      value:
+        networkId: "123e4567-e89b-12d3-a456-426614174000"
+        netType: "NET"
+        score: null
+        scoringTime: null
