@@ -109,7 +109,7 @@ paths:
           example: "NET"
       responses:
         "200":
-          description: Health score queried successfully. Returns `score: null` and `scoringTime: null` if no data is available for the specified network/module.
+          description: "Health score queried successfully. Returns `score: null` and `scoringTime: null` if no data is available for the specified network/module."
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
