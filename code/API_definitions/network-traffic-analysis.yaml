@@ -14,18 +14,20 @@ info:
     # API functionality
     The API provides the following functionality:
     - It allows users to directly query access traffic statistics for all services within a specified time period, including the number of accesses and the cumulative values of uplink and downlink traffic.
+    - Optional application filtering: Clients can provide an `app` query parameter to filter traffic data for a specific application. When provided, only records for that application are returned. When omitted, records for all applications are returned. Regardless of whether the filter is applied, every record in the response includes the `app` field to identify the application it belongs to.
 
     # Request Parameters Definition:
     * **networkId**: Unique identifier of the analyzed network (UUID format).
     * **startDate**: Start date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this is the start of the day (00:00:00). For frequency=HOUR, this is the start of the hour (HH:00:00).
     * **endDate**: End date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this is the start of the next day (00:00:00). For frequency=HOUR, this is the start of the next hour (HH+1:00:00).
     * **frequency**: Analysis granularity (enumeration: 'DAY', 'HOUR').
+    * **app**: Optional filter to query traffic data for a specific application. When provided, only records for that application are returned. When omitted, records for all applications are returned. The `app` field is always present in each response record to identify the application.
     * **page**: Requested page number (1-indexed). Defaults to 1.
     * **perPage**: Number of items per page. Defaults to 20, maximum 100.
 
     # Application identification
 
-    The `app` field in the response identifies the application detected via DPI.
+    The `app` field in every response record identifies the application detected via DPI.
     Application names are normalized by the platform (e.g., "whatsapp", "wechat", "netflix")
     and serve as stable identifiers for client-side filtering and correlation.
     API providers should document the list of possible application names and
@@ -35,13 +37,27 @@ info:
 
     # Privacy and Data Granularity
 
-    This API provides per-application traffic breakdown obtained via DPI (Deep Packet Inspection).
-    All data is aggregated at network level and does not contain individual device or user identifiers.
-    API providers must ensure that per-application data cannot be re-identified to specific users or devices.
+    This API provides traffic analysis data derived from DPI (Deep Packet Inspection) technology.
+    All data exposed by this API is aggregated at network level and does not contain individual device,
+    user, or terminal identifiers. The data represents service-level traffic patterns only.
 
-    The use of two-legged access tokens is recommended for this API, as no end-user personal data
-    is processed. If local regulations require user consent for DPI-based application detection,
-    three-legged tokens with appropriate scopes and consent pages must be implemented by the provider.
+    **DPI deployment and data collection are infrastructure-level activities:**
+    - The availability of traffic data through this API implies that DPI collection has been deployed
+      and authorized for the target network.
+    - This API itself does not initiate DPI collection, does not perform user-specific data processing,
+      and does not require additional user consent at query time.
+    - API providers are responsible for ensuring that DPI collection and data aggregation comply
+      with applicable local regulations.
+
+    **Data classification:**
+    - The `app` field in every record identifies an application service (e.g., "whatsapp", "netflix"),
+      not an individual user or device. It is a service-level identifier, not personally identifiable information (PII).
+    - All traffic counters (`accessCount`, `accessFlow`, etc.) are aggregated totals at the network level.
+    - No individual endpoint, subscriber, or device can be identified from any field in the response.
+
+    **Authentication:** This API uses two-legged access tokens (Client Credentials grant type)
+    for service-to-service authentication. No end-user personal data is processed by this API,
+    therefore no user consent or three-legged tokens are required.
 
     # Error handling
     - `404 NOT FOUND`: Returned when the specified `networkId` does not exist in the system.
@@ -134,6 +150,18 @@ paths:
             $ref: "#/components/schemas/Frequency"
           description: Analysis granularity (time interval for aggregation).
           example: "DAY"
+        - name: app
+          in: query
+          required: false
+          schema:
+            type: string
+            maxLength: 128
+          description: |
+            Optional filter to query traffic data for a specific application.
+            When provided, only records for that application are returned.
+            When omitted, records for all applications are returned.
+            The `app` field is always present in each response record to identify the application.
+          example: "whatsapp"
         - name: page
           in: query
           required: false
@@ -214,27 +242,46 @@ components:
 
     TrafficAnalysisResponse:
       type: object
-      description: Response schema for traffic analysis. Returns empty `records` array if no data available.
+      description: |
+        Response schema for traffic analysis. Returns empty `records` array if no data available.
+
+        **Behavior of the `app` field in records:**
+        - Every traffic record contains the `app` field, identifying the application the data belongs to.
+        - The `app` query parameter acts as a filter: when provided, only records for that application are returned.
+        - When the `app` query parameter is omitted, records for all applications are returned.
+        - In both cases, the `records` array contains time-series data points (grouped by the selected frequency).
       required:
         - records
         - pagination
       properties:
         records:
           type: array
-          description: Array of traffic records for the current page. Empty array if no data available.
+          description: |
+            Array of traffic records for the current page. Empty array if no data available.
+            Each record represents a time slot (as defined by `frequency`) and includes the `app` field
+            to identify the application it belongs to.
           minItems: 0
           maxItems: 100
           items:
             type: object
-            description: Traffic record for a single application
+            required:
+              - app
+              - accessCount
+              - accessUpFlow
+              - accessDownFlow
+              - accessFlow
+              - startDate
+              - endDate
+              - accessDate
             properties:
               app:
                 type: string
                 description: |
-                  Application identifier as recognized by the DPI system.
+                  Application identifier recognized by the DPI system.
+                  This field is present in every record to identify the application the data belongs to.
                   Names are normalized (lowercase, no special characters) for consistency.
                   The set of possible values is provider-specific but should be documented and stable.
-                  API consumers can use this field directly for filtering or correlation.
+                  See the "Application identification" section in the API description for normalization details.
                 example: "whatsapp"
                 maxLength: 128
               ipv4Address:
@@ -253,28 +300,24 @@ components:
                 description: Total number of accesses to the application
                 format: int64
                 minimum: 0
-                maximum: 9223372036854775807
                 example: 150
               accessUpFlow:
                 type: integer
                 description: Total upstream traffic (bytes)
                 format: int64
                 minimum: 0
-                maximum: 9223372036854775807
                 example: 102400
               accessDownFlow:
                 type: integer
                 description: Total downstream traffic (bytes)
                 format: int64
                 minimum: 0
-                maximum: 9223372036854775807
                 example: 204800
               accessFlow:
                 type: integer
                 description: Total traffic (up + down, bytes)
                 format: int64
                 minimum: 0
-                maximum: 9223372036854775807
                 example: 307200
               startDate:
                 allOf:
@@ -378,6 +421,16 @@ components:
             accessUpFlow: 102400
             accessDownFlow: 204800
             accessFlow: 307200
+            startDate: "2024-06-07T00:00:00Z"
+            endDate: "2024-06-07T23:59:59Z"
+            accessDate: "2024-06-07"
+          - app: "wechat"
+            ipv4Address: "202.112.17.123"
+            description: "A Chinese multi-purpose messaging, social media and mobile payment app."
+            accessCount: 200
+            accessUpFlow: 153600
+            accessDownFlow: 307200
+            accessFlow: 460800
             startDate: "2024-06-07T00:00:00Z"
             endDate: "2024-06-07T23:59:59Z"
             accessDate: "2024-06-07"
