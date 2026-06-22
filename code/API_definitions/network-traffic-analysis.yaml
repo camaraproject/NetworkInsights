@@ -89,17 +89,13 @@ info:
 
     As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
     <!-- CAMARA:MANDATORY:additional-error-responses:END -->
-
-  version: wip
-  x-camara-commonalities: "0.7"
+  version: 0.1.0
+  x-camara-commonalities: 0.8.0
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-externalDocs:
-  description: Project documentation at CAMARA
-  url: https://github.com/camaraproject/NetworkInsights
 servers:
-  - url: "{apiRoot}/network-traffic-analysis/vwip"
+  - url: '{apiRoot}/network-traffic-analysis/v0.1'
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -107,6 +103,9 @@ servers:
 tags:
   - name: Network Traffic Analysis
     description: The API allows API consumers to query 5G traffic statistics information for aggregated network-level data.
+externalDocs:
+  description: Project documentation at CAMARA
+  url: https://github.com/camaraproject/NetworkInsights
 paths:
   /traffic-analysis:
     get:
@@ -121,35 +120,35 @@ paths:
         - openId:
             - network-traffic-analysis:traffic-analysis:read
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
         - name: networkId
           in: query
           required: true
           schema:
-            $ref: "#/components/schemas/NetworkId"
+            $ref: '#/components/schemas/NetworkId'
           description: Unique identifier of the analyzed network (UUID format).
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          example: 123e4567-e89b-12d3-a456-426614174000
         - name: startDate
           in: query
           required: true
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+            $ref: '#/components/schemas/DateTime'
           description: Start date and time of the analysis period (RFC 3339 with timezone).
-          example: "2024-06-01T12:00:00Z"
+          example: '2024-06-01T12:00:00Z'
         - name: endDate
           in: query
           required: true
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+            $ref: '#/components/schemas/DateTime'
           description: End date and time of the analysis period (RFC 3339 with timezone).
-          example: "2024-07-01T12:00:00Z"
+          example: '2024-07-01T12:00:00Z'
         - name: frequency
           in: query
           required: true
           schema:
-            $ref: "#/components/schemas/Frequency"
+            $ref: '#/components/schemas/Frequency'
           description: Analysis granularity (time interval for aggregation).
-          example: "DAY"
+          example: DAY
         - name: app
           in: query
           required: false
@@ -161,21 +160,21 @@ paths:
             When provided, only records for that application are returned.
             When omitted, records for all applications are returned.
             The `app` field is always present in each response record to identify the application.
-          example: "whatsapp"
+          example: whatsapp
         - name: page
           in: query
           required: false
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/Page"
+            $ref: '#/components/schemas/Page'
           description: Requested page number (1-indexed). Defaults to 1.
         - name: perPage
           in: query
           required: false
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/PerPage"
+            $ref: '#/components/schemas/PerPage'
           description: Number of items per page. Defaults to 20, maximum 100.
       responses:
-        "200":
+        '200':
           description: Successful response with network traffic analysis data. Returns empty `records` array if no data available.
           headers:
             x-correlator:
@@ -204,42 +203,38 @@ paths:
           $ref: '#/components/responses/Generic403'
         '404':
           $ref: '#/components/responses/Generic404'
-
 components:
   securitySchemes:
     openId:
       description: OpenID Connect authentication
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
-
   parameters:
     x-correlator:
       name: x-correlator
       in: header
       description: Correlation id for the different services
       schema:
-        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
-
+        $ref: '#/components/schemas/XCorrelator'
   headers:
     x-correlator:
       description: Correlation id for the different services
       schema:
-        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
-
+        $ref: '#/components/schemas/XCorrelator'
   schemas:
     NetworkId:
       description: Network ID in UUID format (unique identifier of the analyzed network)
       type: string
       format: uuid
       maxLength: 36
-      example: "123e4567-e89b-12d3-a456-426614174000"
-
+      example: 123e4567-e89b-12d3-a456-426614174000
     Frequency:
       description: Analysis granularity (time interval for aggregation)
       type: string
-      enum: ["DAY", "HOUR"]
-      example: "DAY"
-
+      enum:
+        - DAY
+        - HOUR
+      example: DAY
     TrafficAnalysisResponse:
       type: object
       description: |
@@ -283,18 +278,18 @@ components:
                   Names are normalized (lowercase, no special characters) for consistency.
                   The set of possible values is provider-specific but should be documented and stable.
                   See the "Application identification" section in the API description for normalization details.
-                example: "whatsapp"
+                example: whatsapp
                 maxLength: 128
               ipv4Address:
                 type: string
                 description: Application server IPv4 address
-                example: "202.112.17.122"
+                example: 202.112.17.122
                 format: ipv4
                 maxLength: 15
               description:
                 type: string
                 description: Application description
-                example: "A free cross-platform app for messaging, calls, and media sharing."
+                example: A free cross-platform app for messaging, calls, and media sharing.
                 maxLength: 512
               accessCount:
                 type: integer
@@ -322,32 +317,107 @@ components:
                 example: 307200
               startDate:
                 allOf:
-                  - $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+                  - $ref: '#/components/schemas/DateTime'
                 description: Start of the aggregation period for this record (inclusive). For frequency=DAY, this is the start of the day (00:00:00). For frequency=HOUR, this is the start of the hour (HH:00:00).
               endDate:
                 allOf:
-                  - $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+                  - $ref: '#/components/schemas/DateTime'
                 description: End of the aggregation period for this record (exclusive). For frequency=DAY, this is the start of the next day (00:00:00). For frequency=HOUR, this is the start of the next hour (HH+1:00:00).
               accessDate:
                 type: string
                 format: date
                 description: The calendar date of the record (YYYY-MM-DD). For frequency=HOUR, this is the date of the hour; multiple records with the same accessDate may exist for different hours.
-                example: "2024-06-07"
-                pattern: '^\d{4}-\d{2}-\d{2}$'
+                example: '2024-06-07'
+                pattern: ^\d{4}-\d{2}-\d{2}$
                 maxLength: 10
         pagination:
-          $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
-
+          $ref: '#/components/schemas/Pagination'
+    XCorrelator:
+      type: string
+      description: Correlator string, UUID format recommended but any string matching the pattern can be used
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      maxLength: 256
+      example: b4333c46-49c0-4f62-80d7-f0ef930f1c46
+    DateTime:
+      type: string
+      format: date-time
+      maxLength: 64
+      description: Timestamp. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+      example: '2018-04-05T17:31:00Z'
+    Page:
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 2147483647
+      default: 1
+      description: Current page number (1-indexed).
+      example: 1
+    PerPage:
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 100
+      default: 20
+      description: Number of items per page.
+      example: 20
+    TotalCount:
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 2147483647
+      description: Total number of items matching the query, after filters applied. MAY be omitted where a full count query is prohibitively expensive.
+      example: 87
+    TotalPages:
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 2147483647
+      description: Total number of pages. Equals ceil(totalCount / perPage). MAY be omitted where totalCount is omitted.
+      example: 5
+    Pagination:
+      description: Pagination details helping to navigate through paged results efficiently.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/Page'
+        perPage:
+          $ref: '#/components/schemas/PerPage'
+        totalCount:
+          $ref: '#/components/schemas/TotalCount'
+        totalPages:
+          $ref: '#/components/schemas/TotalPages'
+    ErrorInfo:
+      type: object
+      description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
+          description: HTTP response status code
+        code:
+          type: string
+          maxLength: 96
+          description: A human-readable code to describe the error
+        message:
+          type: string
+          maxLength: 512
+          description: A human-readable description of what the event represents
   responses:
     Generic400:
       description: Bad Request
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+            $ref: '#/components/schemas/ErrorInfo'
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               description: Invalid Argument. Generic Syntax Exception
@@ -365,11 +435,11 @@ components:
       description: Unauthorized
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+            $ref: '#/components/schemas/ErrorInfo'
           examples:
             GENERIC_401_UNAUTHENTICATED:
               description: Request cannot be authenticated and a new authentication is required
@@ -381,11 +451,11 @@ components:
       description: Forbidden
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+            $ref: '#/components/schemas/ErrorInfo'
           examples:
             GENERIC_403_PERMISSION_DENIED:
               description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
@@ -397,11 +467,11 @@ components:
       description: Not found
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+            $ref: '#/components/schemas/ErrorInfo'
           examples:
             GENERIC_404_NOT_FOUND:
               description: Resource is not found
@@ -409,32 +479,31 @@ components:
                 status: 404
                 code: NOT_FOUND
                 message: The specified resource is not found.
-
   examples:
     TrafficAnalysisSuccess:
       description: Successful traffic analysis response example
       value:
         records:
-          - app: "whatsapp"
-            ipv4Address: "202.112.17.122"
-            description: "A free cross-platform app for messaging, calls, and media sharing."
+          - app: whatsapp
+            ipv4Address: 202.112.17.122
+            description: A free cross-platform app for messaging, calls, and media sharing.
             accessCount: 150
             accessUpFlow: 102400
             accessDownFlow: 204800
             accessFlow: 307200
-            startDate: "2024-06-07T00:00:00Z"
-            endDate: "2024-06-07T23:59:59Z"
-            accessDate: "2024-06-07"
-          - app: "wechat"
-            ipv4Address: "202.112.17.123"
-            description: "A Chinese multi-purpose messaging, social media and mobile payment app."
+            startDate: '2024-06-07T00:00:00Z'
+            endDate: '2024-06-07T23:59:59Z'
+            accessDate: '2024-06-07'
+          - app: wechat
+            ipv4Address: 202.112.17.123
+            description: A Chinese multi-purpose messaging, social media and mobile payment app.
             accessCount: 200
             accessUpFlow: 153600
             accessDownFlow: 307200
             accessFlow: 460800
-            startDate: "2024-06-07T00:00:00Z"
-            endDate: "2024-06-07T23:59:59Z"
-            accessDate: "2024-06-07"
+            startDate: '2024-06-07T00:00:00Z'
+            endDate: '2024-06-07T23:59:59Z'
+            accessDate: '2024-06-07'
         pagination:
           page: 1
           perPage: 20
