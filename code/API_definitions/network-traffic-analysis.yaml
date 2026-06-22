@@ -264,6 +264,7 @@ components:
           maxItems: 100
           items:
             type: object
+            description: A single traffic record containing application-level aggregated statistics for a specific time period.
             required:
               - app
               - accessCount
