@@ -2,7 +2,7 @@ repository:
   repository_name: NetworkInsights
   release_tag: r1.3
   release_type: public-release
-  release_date: null
+  release_date: '2026-06-25T00:45:44Z'
   src_commit_sha: 9f767931d88327b80aa06c63c5405a1b8898a5f3
 apis:
 - api_name: network-health-assessment
