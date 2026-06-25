@@ -28,14 +28,16 @@ Sandbox API Repository to describe, develop, document, and test the NetworkInsig
 ## Release Information
 
 > [!NOTE]
-> This repository has only pre-release versions available yet. Pre-releases are for testing and may change before public release.
+> Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest available release**.
 
-* The latest pre-release is [r1.2](https://github.com/camaraproject/NetworkInsights/releases/tag/r1.2) (release candidate), with the following API versions:
-  * **network-health-assessment 0.1.0-rc.1**
-  [[YAML]](https://github.com/camaraproject/NetworkInsights/blob/r1.2/code/API_definitions/network-health-assessment.yaml)  [[ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.2/code/API_definitions/network-health-assessment.yaml&nocors)  [[Swagger]](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.2/code/API_definitions/network-health-assessment.yaml)
-  * **network-traffic-analysis 0.1.0-rc.1**
-  [[YAML]](https://github.com/camaraproject/NetworkInsights/blob/r1.2/code/API_definitions/network-traffic-analysis.yaml)  [[ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.2/code/API_definitions/network-traffic-analysis.yaml&nocors)  [[Swagger]](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.2/code/API_definitions/network-traffic-analysis.yaml)
+* The latest public release is [r1.3](https://github.com/camaraproject/NetworkInsights/releases/tag/r1.3), with the following API versions:
+  * **network-health-assessment 0.1.0**
+  [[YAML]](https://github.com/camaraproject/NetworkInsights/blob/r1.3/code/API_definitions/network-health-assessment.yaml)  [[ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.3/code/API_definitions/network-health-assessment.yaml&nocors)  [[Swagger]](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.3/code/API_definitions/network-health-assessment.yaml)
+  * **network-traffic-analysis 0.1.0**
+  [[YAML]](https://github.com/camaraproject/NetworkInsights/blob/r1.3/code/API_definitions/network-traffic-analysis.yaml)  [[ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.3/code/API_definitions/network-traffic-analysis.yaml&nocors)  [[Swagger]](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r1.3/code/API_definitions/network-traffic-analysis.yaml)
 
+* The latest public release is always available here: https://github.com/camaraproject/NetworkInsights/releases/latest
+* Other releases of this repository are available in https://github.com/camaraproject/NetworkInsights/releases
 * For changes see [CHANGELOG](https://github.com/camaraproject/NetworkInsights/tree/main/CHANGELOG)
 
 _The above section is automatically synchronized by CAMARA project-administration._
@@ -47,7 +49,7 @@ _The above section is automatically synchronized by CAMARA project-administratio
 
   * Schedule: !! tbd
   * [Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meetings/telcoapi) !! Update this link with your meeting registration/join link and delete the task
-  * Minutes: Access [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/fQCoBg) !! update this link to your minutes archive page using the "Share" link and delete the task
+  Minutes: Access [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/fQCoBg)
 
 * Mailing List
   <!-- Note: the `mailinglistname` is either already existing (for API Repositories within a Sub Projects) or will be created by the CAMARA Admin Team. -->
