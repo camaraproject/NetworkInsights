@@ -62,7 +62,7 @@ Changes documented below are compared to version 0.1.0.
 
 ### Added
 
-* N/A
+Creation of the first API definition. The network-health-assessment API allows users to query network health scores, enabling them to intuitively view the overall network health status and enhancing visualization capabilities.
 
 ### Changed
 
@@ -93,7 +93,7 @@ Changes documented below are compared to version 0.1.0.
 
 ### Added
 
-* N/A
+Creation of the first API definition. The network-traffic-analysis API provides time-based queries for individual service requests, including access counts and uplink/downlink traffic. This facilitates the analysis of overall network load conditions and provides analytical support for subsequent resource allocation.
 
 ### Changed
 
