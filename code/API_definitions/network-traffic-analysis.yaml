@@ -18,8 +18,8 @@ info:
 
     # Request Parameters Definition:
     * **networkId**: Unique identifier of the analyzed network (UUID format).
-    * **startDate**: Start date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this must be the start of the day (00:00:00). For frequency=HOUR, this must be the start of the hour (HH:00:00). If the value is not aligned to the required boundary, the API returns `400 OUT_OF_RANGE`.
-    * **endDate**: End date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this must be the start of the next day (00:00:00). For frequency=HOUR, this must be the start of the next hour (HH+1:00:00). If the value is not aligned to the required boundary, the API returns `400 OUT_OF_RANGE`.
+    * **startDate**: Start date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this is the start of the day (00:00:00). For frequency=HOUR, this is the start of the hour (HH:00:00).
+    * **endDate**: End date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this is the start of the next day (00:00:00). For frequency=HOUR, this is the start of the next hour (HH+1:00:00).
     * **frequency**: Analysis granularity (enumeration: 'DAY', 'HOUR').
     * **app**: Optional filter to query traffic data for a specific application. When provided, only records for that application are returned. When omitted, records for all applications are returned. The `app` field is always present in each response record to identify the application.
     * **page**: Requested page number (1-indexed). Defaults to 1.
@@ -286,15 +286,11 @@ components:
                 example: "whatsapp"
                 maxLength: 128
               ipv4Address:
-                allOf:
-                  - $ref: "../common/CAMARA_common.yaml#/components/schemas/SingleIpv4Address"
-                description: Application server IPv4 address (if applicable)
+                type: string
+                description: Application server IPv4 address
                 example: "202.112.17.122"
-              ipv6Address:
-                allOf:
-                  - $ref: "../common/CAMARA_common.yaml#/components/schemas/DeviceIpv6Address"
-                description: Application server IPv6 address (if applicable)
-                example: "2001:db8::1"
+                format: ipv4
+                maxLength: 15
               description:
                 type: string
                 description: Application description
@@ -338,14 +334,11 @@ components:
                 description: End of the aggregation period for this record (exclusive). For frequency=DAY, this is the start of the next day (00:00:00). For frequency=HOUR, this is the start of the next hour (HH+1:00:00).
               accessDate:
                 type: string
-                minLength: 10
-                maxLength: 19
-                description: |
-                  The calendar date of the record. Format depends on the requested frequency:
-                  - For frequency=DAY: YYYY-MM-DD (e.g., "2024-06-07")
-                  - For frequency=HOUR: YYYY-MM-DD HH:00:00 (e.g., "2024-06-07 14:00:00")
-                  Multiple records with the same accessDate may exist for different hours.
+                format: date
+                description: The calendar date of the record (YYYY-MM-DD). For frequency=HOUR, this is the date of the hour; multiple records with the same accessDate may exist for different hours.
                 example: "2024-06-07"
+                pattern: '^\d{4}-\d{2}-\d{2}$'
+                maxLength: 10
         pagination:
           $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
 
@@ -358,17 +351,7 @@ components:
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
-              - type: object
-                properties:
-                  status:
-                    enum:
-                      - 400
-                  code:
-                    enum:
-                      - INVALID_ARGUMENT
-                      - OUT_OF_RANGE
+            $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               description: Invalid Argument. Generic Syntax Exception
@@ -382,12 +365,6 @@ components:
                 status: 400
                 code: OUT_OF_RANGE
                 message: Client specified an invalid range.
-            GENERIC_400_OUT_OF_RANGE_ALIGNMENT:
-              description: Start or end date is not aligned to the required boundary for the specified frequency
-              value:
-                status: 400
-                code: OUT_OF_RANGE
-                message: startDate must be aligned to the start of the day (00:00:00) when frequency=DAY, or to the start of the hour (HH:00:00) when frequency=HOUR. endDate must be aligned accordingly.
     Generic401:
       description: Unauthorized
       headers:
@@ -444,7 +421,6 @@ components:
         records:
           - app: "whatsapp"
             ipv4Address: "202.112.17.122"
-            ipv6Address: "2001:db8::1"
             description: "A free cross-platform app for messaging, calls, and media sharing."
             accessCount: 150
             accessUpFlow: 102400
@@ -455,7 +431,6 @@ components:
             accessDate: "2024-06-07"
           - app: "wechat"
             ipv4Address: "202.112.17.123"
-            ipv6Address: "2001:db8::2"
             description: "A Chinese multi-purpose messaging, social media and mobile payment app."
             accessCount: 200
             accessUpFlow: 153600
