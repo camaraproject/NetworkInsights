@@ -88,3 +88,42 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     And the response property "$.status" is 404
     And the response property "$.code" is "NOT_FOUND"
     And the response property "$.message" contains a user friendly text
+
+  @network_traffic_analysis_getTrafficAnalysis_07_start_date_misalignment_day_scenario
+  Scenario: Error response when startDate is not aligned to the start of the day for frequency=DAY
+    Given the query parameter "frequency" is set to "DAY"
+    And the query parameter "startDate" is set to a value not aligned to the start of the day, for example "2024-06-07T12:30:00Z"
+    And the query parameter "endDate" is set to a valid end date aligned to the day boundary
+    When the request "getTrafficAnalysis" is sent
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains "aligned to the start"
+
+  @network_traffic_analysis_getTrafficAnalysis_08_end_date_misalignment_day_scenario
+  Scenario: Error response when endDate is not aligned to the start of the next day for frequency=DAY
+    Given the query parameter "frequency" is set to "DAY"
+    And the query parameter "startDate" is set to a valid start date aligned to the day boundary
+    And the query parameter "endDate" is set to a value not aligned to the start of the next day, for example "2024-06-08T12:30:00Z"
+    When the request "getTrafficAnalysis" is sent
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains "aligned to the start"
+
+  @network_traffic_analysis_getTrafficAnalysis_09_start_date_misalignment_hour_scenario
+  Scenario: Error response when startDate is not aligned to the start of the hour for frequency=HOUR
+    Given the query parameter "frequency" is set to "HOUR"
+    And the query parameter "startDate" is set to a value not aligned to the start of the hour, for example "2024-06-07T12:30:00Z"
+    And the query parameter "endDate" is set to a valid end date aligned to the hour boundary
+    When the request "getTrafficAnalysis" is sent
+    Then the response status code is 400
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains "aligned to the start"

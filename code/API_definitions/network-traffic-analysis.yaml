@@ -18,8 +18,8 @@ info:
 
     # Request Parameters Definition:
     * **networkId**: Unique identifier of the analyzed network (UUID format).
-    * **startDate**: Start date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this is the start of the day (00:00:00). For frequency=HOUR, this is the start of the hour (HH:00:00).
-    * **endDate**: End date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this is the start of the next day (00:00:00). For frequency=HOUR, this is the start of the next hour (HH+1:00:00).
+    * **startDate**: Start date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this must be the start of the day (00:00:00). For frequency=HOUR, this must be the start of the hour (HH:00:00). If the value is not aligned to the required boundary, the API returns `400 INVALID_ARGUMENT`.
+    * **endDate**: End date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this must be the start of the next day (00:00:00). For frequency=HOUR, this must be the start of the next hour (HH+1:00:00). If the value is not aligned to the required boundary, the API returns `400 INVALID_ARGUMENT`.
     * **frequency**: Analysis granularity (enumeration: 'DAY', 'HOUR').
     * **app**: Optional filter to query traffic data for a specific application. When provided, only records for that application are returned. When omitted, records for all applications are returned. The `app` field is always present in each response record to identify the application.
     * **page**: Requested page number (1-indexed). Defaults to 1.
@@ -371,6 +371,12 @@ components:
                 status: 400
                 code: OUT_OF_RANGE
                 message: Client specified an invalid range.
+            GENERIC_400_INVALID_ARGUMENT_ALIGNMENT:
+              description: Start or end date is not aligned to the required boundary for the specified frequency
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: startDate must be aligned to the start of the day (00:00:00) when frequency=DAY, or to the start of the hour (HH:00:00) when frequency=HOUR. endDate must be aligned accordingly.
     Generic401:
       description: Unauthorized
       headers:
