@@ -286,11 +286,15 @@ components:
                 example: "whatsapp"
                 maxLength: 128
               ipv4Address:
-                type: string
-                description: Application server IPv4 address
+                allOf:
+                  - $ref: "../common/CAMARA_common.yaml#/components/schemas/SingleIpv4Address"
+                description: Application server IPv4 address (if applicable)
                 example: "202.112.17.122"
-                format: ipv4
-                maxLength: 15
+              ipv6Address:
+                allOf:
+                  - $ref: "../common/CAMARA_common.yaml#/components/schemas/SingleIpv6Address"
+                description: Application server IPv6 address (if applicable)
+                example: "2001:db8::1"
               description:
                 type: string
                 description: Application description
@@ -423,6 +427,7 @@ components:
         records:
           - app: "whatsapp"
             ipv4Address: "202.112.17.122"
+            ipv6Address: "2001:db8::1"
             description: "A free cross-platform app for messaging, calls, and media sharing."
             accessCount: 150
             accessUpFlow: 102400
@@ -433,6 +438,7 @@ components:
             accessDate: "2024-06-07T00:00:00Z"
           - app: "wechat"
             ipv4Address: "202.112.17.123"
+            ipv6Address: "2001:db8::2"
             description: "A Chinese multi-purpose messaging, social media and mobile payment app."
             accessCount: 200
             accessUpFlow: 153600
