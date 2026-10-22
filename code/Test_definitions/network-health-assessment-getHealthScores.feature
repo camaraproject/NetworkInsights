@@ -29,7 +29,7 @@ Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
 
   @network_health_assessment_getHealthScores_02_invalid_argument_scenario
   Scenario: Error response for invalid argument in query parameters
-    Given a query parameter argument is invalid, such as illegal character or format error
+    Given a query parameter argument is invalid, such as illegal character, format error, or invalid netType value
     When the request "getHealthScores" is sent
     Then the response status code is 400
     And the response header "Content-Type" is "application/json"
@@ -37,17 +37,6 @@ Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" is "Client specified an invalid argument, request body or query param."
-
-  @network_health_assessment_getHealthScores_03_out_of_range_scenario
-  Scenario: Error responses where the parameters are out of range
-    Given a query parameter argument is out of range, for example an invalid netType value
-    When the request "getHealthScores" is sent
-    Then the response status code is 400
-    And the response header "Content-Type" is "application/json"
-    And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response property "$.status" is 400
-    And the response property "$.code" is "OUT_OF_RANGE"
-    And the response property "$.message" is "Client specified an invalid range."
 
   @network_health_assessment_getHealthScores_04_missing_authorization_scenario
   Scenario: Error response for no header "Authorization"
