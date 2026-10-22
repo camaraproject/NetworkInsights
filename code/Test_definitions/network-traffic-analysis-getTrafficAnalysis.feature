@@ -127,3 +127,63 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains "aligned to the start"
+
+  @network_traffic_analysis_getTrafficAnalysis_10_app_filter_scenario
+  Scenario: Filter traffic data by application using app query parameter
+    Given valid query parameters: networkId, startDate, endDate, frequency
+    And the query parameter "app" is set to a valid application name, for example "whatsapp"
+    When the request "getTrafficAnalysis" is sent
+    Then the response status code is 200
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
+    And every record in the response property "$.records" has the property "app" equal to the requested application name
+
+  @network_traffic_analysis_getTrafficAnalysis_11_pagination_scenario
+  Scenario: Paginate traffic analysis results with page and perPage parameters
+    Given valid query parameters: networkId, startDate, endDate, frequency
+    And the query parameter "page" is set to a valid page number, for example 2
+    And the query parameter "perPage" is set to a valid page size, for example 5
+    And traffic data exists for the network with more than 5 records
+    When the request "getTrafficAnalysis" is sent
+    Then the response status code is 200
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
+    And the response property "$.pagination.page" equals the requested page number
+    And the response property "$.pagination.perPage" equals the requested page size
+    And the response property "$.records" has at most the requested page size items
+
+  @network_traffic_analysis_getTrafficAnalysis_12_default_pagination_scenario
+  Scenario: Use default pagination values when page and perPage are omitted
+    Given valid query parameters: networkId, startDate, endDate, frequency
+    And the query parameters "page" and "perPage" are not sent
+    When the request "getTrafficAnalysis" is sent
+    Then the response status code is 200
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
+    And the response property "$.pagination.page" equals 1
+    And the response property "$.pagination.perPage" equals 20
+
+  @network_traffic_analysis_getTrafficAnalysis_13_no_data_success_scenario
+  Scenario: Return empty records array when no traffic data is available for the requested period
+    Given the network exists but no traffic data is available for the requested time period
+    And valid query parameters: networkId, startDate, endDate, frequency
+    When the request "getTrafficAnalysis" is sent
+    Then the response status code is 200
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
+    And the response property "$.records" is an empty array
+    And the response property "$.pagination.totalCount" equals 0
+    And the response property "$.pagination.totalPages" equals 0
+
+  @network_traffic_analysis_getTrafficAnalysis_14_missing_x_correlator_scenario
+  Scenario: Handle request without x-correlator header
+    Given valid query parameters: networkId, startDate, endDate, frequency
+    And the header "x-correlator" is not sent
+    When the request "getTrafficAnalysis" is sent
+    Then the response status code is 200
+    And the response header "Content-Type" is "application/json"
+    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"

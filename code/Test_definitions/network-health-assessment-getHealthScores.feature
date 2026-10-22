@@ -82,3 +82,24 @@ Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
     And the response property "$.status" is 404
     And the response property "$.code" is "NOT_FOUND"
     And the response property "$.message" contains a user friendly text
+
+  @network_health_assessment_getHealthScores_07_no_data_success_scenario
+  Scenario: Return null score and scoringTime when no health data is available
+    Given the network exists but no health data is available for the specified network and netType
+    And the query parameters are set to valid values
+    When the request "getHealthScores" is sent
+    Then the response status code is 200
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response body complies with the OAS schema at "/components/schemas/HealthInfo"
+    And the response property "$.score" is null
+    And the response property "$.scoringTime" is null
+
+  @network_health_assessment_getHealthScores_08_missing_x_correlator_scenario
+  Scenario: Handle request without x-correlator header
+    Given the query parameters are set to valid values
+    And the header "x-correlator" is not sent
+    When the request "getHealthScores" is sent
+    Then the response status code is 200
+    And the response header "Content-Type" is "application/json"
+    And the response body complies with the OAS schema at "/components/schemas/HealthInfo"
