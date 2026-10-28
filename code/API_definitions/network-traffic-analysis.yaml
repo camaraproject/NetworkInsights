@@ -22,7 +22,7 @@ info:
     * **endDate**: End date and time of the analysis period (RFC 3339 with timezone). For frequency=DAY, this must be the start of the next day (00:00:00). For frequency=HOUR, this must be the start of the next hour (HH+1:00:00). If the value is not aligned to the required boundary, the API returns `400 INVALID_ARGUMENT`.
     * **frequency**: Analysis granularity (enumeration: 'DAY', 'HOUR').
     * **app**: Optional filter to query traffic data for a specific application. When provided, only records for that application are returned. When omitted, records for all applications are returned. The `app` field is always present in each response record to identify the application.
-    * **page**: Requested page number (1-indexed). Defaults to 1.
+    * **page**: Requested page number (1-indexed). Defaults to 1. If `page` is greater than the total number of pages, the API returns `200 OK` with an empty `records` array and a pagination object reflecting the actual total count and page count.
     * **perPage**: Number of items per page. Defaults to 20, maximum 100.
 
     # Application identification
@@ -189,6 +189,15 @@ paths:
                       perPage: 20
                       totalCount: 0
                       totalPages: 0
+                PageOutOfRange:
+                  description: Example response when the requested page is greater than the total number of pages
+                  value:
+                    records: []
+                    pagination:
+                      page: 5
+                      perPage: 20
+                      totalCount: 22
+                      totalPages: 2
         '400':
           $ref: '../common/CAMARA_common.yaml#/components/responses/BadRequestWithRange400'
         '401':
