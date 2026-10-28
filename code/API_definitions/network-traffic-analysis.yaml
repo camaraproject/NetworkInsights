@@ -124,7 +124,7 @@ paths:
         - openId:
             - network-traffic-analysis:traffic-analysis:read
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
         - name: networkId
           in: query
           required: true
@@ -165,24 +165,14 @@ paths:
             When omitted, records for all applications are returned.
             The `app` field is always present in each response record to identify the application.
           example: "whatsapp"
-        - name: page
-          in: query
-          required: false
-          schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/Page"
-          description: Requested page number (1-indexed). Defaults to 1.
-        - name: perPage
-          in: query
-          required: false
-          schema:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/PerPage"
-          description: Number of items per page. Defaults to 20, maximum 100.
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/page"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/perPage"
       responses:
         "200":
           description: Successful response with network traffic analysis data. Returns empty `records` array if no data available.
           headers:
             x-correlator:
-              $ref: '#/components/headers/x-correlator'
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
           content:
             application/json:
               schema:
@@ -209,26 +199,6 @@ paths:
           $ref: '../common/CAMARA_common.yaml#/components/responses/NotFound404'
 
 components:
-  securitySchemes:
-    openId:
-      description: OpenID Connect authentication
-      type: openIdConnect
-      openIdConnectUrl: https://example.com/.well-known/openid-configuration
-
-  parameters:
-    x-correlator:
-      name: x-correlator
-      in: header
-      description: Correlation id for the different services
-      schema:
-        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
-
-  headers:
-    x-correlator:
-      description: Correlation id for the different services
-      schema:
-        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
-
   schemas:
     NetworkId:
       description: Network ID in UUID format (unique identifier of the analyzed network)
