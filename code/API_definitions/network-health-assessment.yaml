@@ -95,7 +95,7 @@ paths:
         - openId:
             - network-health-assessment:health-scores:read
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
         - name: networkId
           in: query
           required: true
@@ -115,7 +115,7 @@ paths:
           description: "Health score queried successfully. Returns `score: null` and `scoringTime: null` if no data is available for the specified network/module."
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
           content:
             application/json:
               schema:
@@ -137,26 +137,6 @@ paths:
           $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
 
 components:
-  securitySchemes:
-    openId:
-      description: OpenID Connect authentication
-      type: openIdConnect
-      openIdConnectUrl: https://example.com/.well-known/openid-configuration
-
-  parameters:
-    x-correlator:
-      name: x-correlator
-      in: header
-      description: Correlation id for the different services
-      schema:
-        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
-
-  headers:
-    x-correlator:
-      description: Correlation id for the different services
-      schema:
-        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
-
   schemas:
     NetworkId:
       description: Network ID in UUID format (unique identifier of the analyzed network)
@@ -187,11 +167,10 @@ components:
         score:
           $ref: "#/components/schemas/Score"
         scoringTime:
-          type: string
-          format: date-time
+          allOf:
+            - $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
           nullable: true
-          maxLength: 64
-          description: Latest time point of the health score calculation. Returns `null` if no health data is available. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+          description: Latest time point of the health score calculation. Returns `null` if no health data is available.
           example: "2025-12-01T12:00:00Z"
       required:
         - networkId
