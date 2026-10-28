@@ -95,7 +95,7 @@ paths:
         - openId:
             - network-health-assessment:health-scores:read
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
         - name: networkId
           in: query
           required: true
@@ -115,7 +115,7 @@ paths:
           description: "Health score queried successfully. Returns `score: null` and `scoringTime: null` if no data is available for the specified network/module."
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
           content:
             application/json:
               schema:
@@ -137,26 +137,6 @@ paths:
           $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
 
 components:
-  securitySchemes:
-    openId:
-      description: OpenID Connect authentication
-      type: openIdConnect
-      openIdConnectUrl: https://example.com/.well-known/openid-configuration
-
-  parameters:
-    x-correlator:
-      name: x-correlator
-      in: header
-      description: Correlation id for the different services
-      schema:
-        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
-
-  headers:
-    x-correlator:
-      description: Correlation id for the different services
-      schema:
-        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
-
   schemas:
     NetworkId:
       description: Network ID in UUID format (unique identifier of the analyzed network)
