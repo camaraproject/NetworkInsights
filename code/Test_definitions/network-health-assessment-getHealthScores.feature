@@ -25,7 +25,7 @@ Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies with the OAS schema at "/components/schemas/HealthInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/HealthInfo"
 
   @network_health_assessment_getHealthScores_02_invalid_argument_scenario
   Scenario: Error response for invalid argument in query parameters
@@ -80,7 +80,7 @@ Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies with the OAS schema at "/components/schemas/HealthInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/HealthInfo"
     And the response property "$.score" is null
     And the response property "$.scoringTime" is null
 
@@ -91,4 +91,4 @@ Feature: CAMARA Network Health Assessment API vwip - Operation getHealthScores
     When the request "getHealthScores" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
-    And the response body complies with the OAS schema at "/components/schemas/HealthInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/HealthInfo"
