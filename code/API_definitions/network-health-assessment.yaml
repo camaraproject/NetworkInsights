@@ -95,7 +95,7 @@ paths:
         - openId:
             - network-health-assessment:health-scores:read
       parameters:
-        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+        - $ref: "#/components/parameters/x-correlator"
         - name: networkId
           in: query
           required: true
@@ -115,7 +115,7 @@ paths:
           description: "Health score queried successfully. Returns `score: null` and `scoringTime: null` if no data is available for the specified network/module."
           headers:
             x-correlator:
-              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+              $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
@@ -137,6 +137,26 @@ paths:
           $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
 
 components:
+  securitySchemes:
+    openId:
+      description: OpenID Connect authentication
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+
+  parameters:
+    x-correlator:
+      name: x-correlator
+      in: header
+      description: Correlation id for the different services
+      schema:
+        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
+
+  headers:
+    x-correlator:
+      description: Correlation id for the different services
+      schema:
+        $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
+
   schemas:
     NetworkId:
       description: Network ID in UUID format (unique identifier of the analyzed network)
@@ -144,16 +164,6 @@ components:
       format: uuid
       maxLength: 36
       example: "123e4567-e89b-12d3-a456-426614174000"
-
-    Score:
-      title: HealthScore
-      description: Value of the health score (0-100, higher is better). Returns `null` if no health data is available for the specified network/module.
-      type: number
-      format: double
-      minimum: 0
-      maximum: 100
-      nullable: true
-      example: 94.56
 
     HealthInfo:
       title: NetworkHealthInfo
@@ -165,12 +175,19 @@ components:
         netType:
           $ref: "#/components/schemas/NetTypeEnum"
         score:
-          $ref: "#/components/schemas/Score"
-        scoringTime:
-          allOf:
-            - $ref: "../common/CAMARA_common.yaml#/components/schemas/DateTime"
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
           nullable: true
-          description: Latest time point of the health score calculation. Returns `null` if no health data is available.
+          description: Value of the health score (0-100, higher is better). Returns `null` if no health data is available for the specified network/module.
+          example: 94.56
+        scoringTime:
+          type: string
+          nullable: true
+          format: date-time
+          maxLength: 64
+          description: Latest time point of the health score calculation. Returns `null` if no health data is available. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
           example: "2025-12-01T12:00:00Z"
       required:
         - networkId
