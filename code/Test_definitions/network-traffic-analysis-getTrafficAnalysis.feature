@@ -31,7 +31,7 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
+    And the response body complies to the OAS schema at "#/components/schemas/TrafficAnalysisResponse"
 
   @network_traffic_analysis_getTrafficAnalysis_02_invalid_argument_scenario
   Scenario: Error response for invalid argument in query parameters
@@ -136,7 +136,7 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
+    And the response body complies to the OAS schema at "#/components/schemas/TrafficAnalysisResponse"
     And every record in the response property "$.records" has the property "app" equal to the requested application name
 
   @network_traffic_analysis_getTrafficAnalysis_11_pagination_scenario
@@ -149,7 +149,7 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
+    And the response body complies to the OAS schema at "#/components/schemas/TrafficAnalysisResponse"
     And the response property "$.pagination.page" equals the requested page number
     And the response property "$.pagination.perPage" equals the requested page size
     And the response property "$.records" has at most the requested page size items
@@ -162,7 +162,7 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
+    And the response body complies to the OAS schema at "#/components/schemas/TrafficAnalysisResponse"
     And the response property "$.pagination.page" equals 1
     And the response property "$.pagination.perPage" equals 20
 
@@ -174,7 +174,7 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
+    And the response body complies to the OAS schema at "#/components/schemas/TrafficAnalysisResponse"
     And the response property "$.records" is an empty array
     And the response property "$.pagination.totalCount" equals 0
     And the response property "$.pagination.totalPages" equals 0
@@ -186,4 +186,4 @@ Feature: CAMARA Network Traffic Analysis API vwip - Operation getTrafficAnalysis
     When the request "getTrafficAnalysis" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
-    And the response body complies to the OAS schema at "/components/schemas/TrafficAnalysisResponse"
+    And the response body complies to the OAS schema at "#/components/schemas/TrafficAnalysisResponse"
