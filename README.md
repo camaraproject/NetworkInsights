@@ -40,6 +40,15 @@ Sandbox API Repository to describe, develop, document, and test the NetworkInsig
 * Other releases of this repository are available in https://github.com/camaraproject/NetworkInsights/releases
 * For changes see [CHANGELOG](https://github.com/camaraproject/NetworkInsights/tree/main/CHANGELOG)
 
+### Upcoming Release Preview
+
+* Pre-release: [r2.1](https://github.com/camaraproject/NetworkInsights/releases/tag/r2.1) (release candidate)
+  * **network-health-assessment 0.2.0-rc.1**
+  [[YAML]](https://github.com/camaraproject/NetworkInsights/blob/r2.1/code/API_definitions/network-health-assessment.yaml)  [[ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r2.1/code/API_definitions/network-health-assessment.yaml&nocors)  [[Swagger]](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r2.1/code/API_definitions/network-health-assessment.yaml)
+  * **network-traffic-analysis 0.2.0-rc.1**
+  [[YAML]](https://github.com/camaraproject/NetworkInsights/blob/r2.1/code/API_definitions/network-traffic-analysis.yaml)  [[ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r2.1/code/API_definitions/network-traffic-analysis.yaml&nocors)  [[Swagger]](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/NetworkInsights/r2.1/code/API_definitions/network-traffic-analysis.yaml)
+
+
 _The above section is automatically synchronized by CAMARA project-administration._
 <!-- CAMARA:RELEASE-INFO:END -->
 
