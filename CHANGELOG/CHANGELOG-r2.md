@@ -78,15 +78,19 @@ Changes documented below are compared to version 0.1.0.
 
 ### Added
 
-* N/A
+Add missing test scenarios for no-data responses and missing x-correlator header.
 
 ### Changed
 
-* N/A
+Flatten HealthInfo schema by removing redundant allOf wrapper.
+
+Define dedicated 400 response for getHealthScores to only include INVALID_ARGUMENT (resolving unreachable OUT_OF_RANGE).
+
+Reuse common components from Commonalities r4.4 (security scheme, x-correlator parameter, error responses). 
 
 ### Fixed
 
-* N/A
+Align API definitions and test definitions with Commonalities r4.4 (including migrating from deprecated Generic* error responses to named catalogue responses).
 
 ### Removed
 
@@ -109,15 +113,23 @@ Changes documented below are compared to version 0.1.0.
 
 ### Added
 
-* N/A
+Document out-of-range page behavior (returns 200 OK with empty records and accurate pagination).
+
+Add missing test scenarios for app filter, pagination, no-data responses, and missing x-correlator header.
 
 ### Changed
 
-* N/A
+Use DateTime schema for accessDate to support both DAY and HOUR statistical points. 
+
+Reference the common SingleIpv4Address schema and add ipv6Address (SingleIpv6Address) for application server addresses. 
+
+Document date alignment rules and return 400 INVALID_ARGUMENT for misaligned startDate/endDate. 
+
+Reuse common components from Commonalities r4.4 (security scheme, x-correlator, page/perPage parameters, error responses). 
 
 ### Fixed
 
-* N/A
+Align API definitions and test definitions with Commonalities r4.4 (including migrating from deprecated Generic* error responses to named catalogue responses).
 
 ### Removed
 
